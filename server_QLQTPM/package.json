@@ -1,0 +1,9 @@
+{
+  "name": "server_qlqtpm",
+  "version": "0.0.0",
+  "description": "server_QLQTPM",
+  "main": "server.js",
+  "author": {
+    "name": "Zitch"
+  }
+}
