@@ -1,6 +1,15 @@
-var connectMongoDB = require('./fun/connectMongoDB')
+var connectDB = require('./fun/connectDB')
 
 
-connectMongoDB.createDB();
+loadAllHangSX = function() {
+	return connectDB.load("select * from 'hang_sx'");
+}
 
-connectMongoDB.createCollection('student');
+
+loadAllHangSX()
+	.then(name => {
+		for(c of name){
+			console.log(c.truso);
+		}
+	})
+	.catch(err => console.log('${err.code} => ${err.sqlMessage}'));

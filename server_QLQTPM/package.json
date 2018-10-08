@@ -3,11 +3,23 @@
   "version": "0.0.0",
   "description": "server_QLQTPM",
   "main": "server.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NguyenTranHoangNam/dev_server_DoAn_QLQTPM.git"
+  },
   "author": {
     "name": "Zitch"
   },
+  "license": "ISC",
   "scripts": {
     "main": "node server.js",
-       "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "mainopen": "node servershowbrowser.js"
+  },
+  "dependencies": {
+    "express": "^4.16.3",
+    "mysql": "^2.16.0",
+    "node-persist": "^3.0.1",
+    "nodemon": "^1.18.4"
   }
 }
