@@ -1,29 +1,39 @@
 ﻿
-var http = require('http');
-var bodyParser = require("body-parser");
+var express = require("express");
+var app = express();
+var router = express.Router();
+
+var bodyparser = require('body-parser');
+
 var num_port = 1742;
 var port = process.env.port || num_port;
 
 
-var server = require("express");
+
 var user = require("./fun/userController");
 
+app.use(bodyparser.urlencoded({extended: true}));
+app.use(bodyparser.json());
+app.use(session({secret: 'QLPM'}));
 
-server.route('/login')
-	.post(user.login);
+app.route('/')
+.get(user.testConnectDB);
 
-server.route('/register')
-	.post(user.register);
+app.route('/login')
+.post(user.login);
 
-server.route('/logout')
-	.get()
-	.post()
-	.put()
-	.delete();
+app.route('/register')
+.post(user.register);
+
+app.route('/logout')
+.get()
+.post()
+.put()
+.delete();
 
 
-server.listen(port);
-console.log("Link server: localhost:" + process.env.port + " and localhost:" + num_port);
+app.listen(port);
+console.log("Link server: "+require("ip").address()+":" + process.env.port + " and "+require("ip").address()+":" + num_port);
 
 // user.showAll();
 console.log("Running server!!!");

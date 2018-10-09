@@ -41,5 +41,11 @@ exports.testConnectDB = function(req, res) {
 }
 
 exports.logout = function(req,res) {
-	
+	req.session.destroy(function(err) {
+		if(err){
+			res.negotiate(err);
+		}else{
+			res.redirect('/');
+		}
+	});
 }
