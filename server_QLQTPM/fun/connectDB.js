@@ -3,11 +3,11 @@ var mysql = require('mysql');
 exports.load = function(query) {
 	return new Promise((resolve, reject) => {
 		var connection = mysql.createConnection({
-			host: '172.0.0.1',
+			host: 'databases.000webhost.com',
 			port: '3306',
-			user: 'root',
-			password: '',
-			database: 'ChamSocKhachHang'
+			user: 'id7411466_jeremy',
+			password: '0908325568',
+			database: 'chamsockhachhang',
 		});
 
 		connection.connect();
