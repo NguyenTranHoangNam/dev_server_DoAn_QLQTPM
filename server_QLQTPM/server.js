@@ -31,6 +31,8 @@ app.route('/logout')
 .put()
 .delete();
 
+app.route('/logged')
+.get(user.checkLoggedIn);
 
 app.listen(port);
 console.log("Link server: "+require("ip").address()+":" + process.env.port + " and "+require("ip").address()+":" + num_port);
