@@ -5,27 +5,27 @@ var session = require('express-session')
 exports.login = function(req, res){
 	if(req.session.Email){
 		res.status(100).send({message: 'Đã đăng nhập'});
+	}else{
+		var un = req.body.u;
+		var pw = req.body.p;
+		console.log('select MaTK, Email, Password from TaiKhoan where '+
+			'Email like \''+un+'\' and Password like \''+pw+'\'');
+		connect.load('select MaTK, Email, Password from TaiKhoan where '+
+			'Email like \''+un+'\' and Password like \''+pw+'\'')
+		.then(users => {
+			console.log(JSON.stringify(users));
+			if(users.lenth === 0){
+				res.status(400).send({ message: 'Đăng nhập thất bại' });
+			}else if(users[0].Email == un && users[0].Password == pw){
+				req.session.Email = users[0].Email; 
+				users[0].Password = undefined;
+				res.status(200).send(JSON.stringify(users[0]));
+			}else {
+				res.status(400).send({ message: 'Đăng nhập thất bại' });
+			}
+		})
+		.catch((error) => res.status(400).send(error));
 	}
-	//res.status(100).send({message: 'Đã đăng nhập'});
-	var un = req.body.u;
-	var pw = req.body.p;
-	console.log(req.body);
-	return connect.load('select MaTK, Email, Ten \'TenCongTy\' from TaiKhoan, CongTy where TaiKhoan.MaCty = CongTy.MaCty '+
-		'and Email like \''+un+'\' and Password like \''+pw+'\'')
-	.then(users => {
-		if(users.lenth === 0){
-			console.log("123456");
-			res.status(400).send({ message: 'Đăng nhập thất bại' });
-		}else if(users[0].Email == un && users[0].Password == pw){
-			res.session.Email = users[0].Email; 
-			console.log(users[0]);
-			res.status(200).send(users[0]);
-		}else {
-			console.log("456789");
-			res.status(400).send({ message: 'Đăng nhập thất bại' });
-		}
-	})
-	.catch((error) => res.status(400).send(error));
 }
 
 exports.register = function(req, res) {
@@ -33,10 +33,10 @@ exports.register = function(req, res) {
 		res.status(100).send({message: 'Đã đăng nhập'});
 	}
 
-	let email = req.params.email;
-	let pw = req.params.pw;
-	let f_name = req.params.fname;
-	let l_name = req.params.lname;
+	let email = req.body.email;
+	let pw = req.body.pw;
+	let f_name = req.body.fname;
+	let l_name = req.body.lname;
 
 	connect.load('insert into TaiKhoan(TenHienThi, Email, Password) values(\''+f_name+' '+l_name+'\', \''+email+'\',\''+pw+'\');')
 	.then(() => {
