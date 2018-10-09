@@ -1,4 +1,4 @@
-var connect = require('connectDB');
+var connect = require('./connectDB');
 
 exports.login = function(req, res){
 	var un = req.params.u;
@@ -27,5 +27,13 @@ exports.register = function(req, res) {
 	.then(() => {
 			res.status(200).send({message: 'Tạo tài khoản thành công.'});
 	})
-	.catch((error) => res.status(400).send(error))''
+	.catch((error) => res.status(400).send(error));
+}
+
+exports.showAll = function(req, res) {
+	connect.load('SELECT * FROM TaiKhoan')
+	.then(user =>{
+		console.log(user);
+	})
+	.catch((error) => res.status(400).send(error));
 }

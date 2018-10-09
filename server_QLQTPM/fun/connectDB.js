@@ -1,12 +1,13 @@
 var mysql = require('mysql');
 
-exports.load = function(query) {
+exports.load = function(sql) {
 	return new Promise((resolve, reject) => {
 		var connection = mysql.createConnection({
-			host: 'databases.000webhost.com',
+			host: 'www.db4free.net',
+			//connectionLimit: 10,
 			port: '3306',
-			user: 'id7411466_jeremy',
-			password: '0908325568',
+			user: 'teamnat',
+			password: 'abcghi2356',
 			database: 'chamsockhachhang',
 		});
 
