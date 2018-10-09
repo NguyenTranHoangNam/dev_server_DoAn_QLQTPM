@@ -1,15 +1,4 @@
-var connectDB = require('./fun/connectDB')
+var user = require('./fun/userController')
 
 
-loadAllHangSX = function() {
-	return connectDB.load("select * from 'hang_sx'");
-}
-
-
-loadAllHangSX()
-	.then(name => {
-		for(c of name){
-			console.log(c.truso);
-		}
-	})
-	.catch(err => console.log('${err.code} => ${err.sqlMessage}'));
+user.showAll();
