@@ -18,7 +18,7 @@ app.use(bodyparser.json());
 app.use(session({secret: 'QLPM'}));
 
 app.route('/')
-.get(user.testConnectDB);
+.get(user.showAll);
 
 app.route('/login')
 .post(user.login);

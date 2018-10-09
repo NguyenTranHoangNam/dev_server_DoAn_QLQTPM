@@ -6,19 +6,22 @@ exports.login = function(req, res){
 	if(req.session.Email){
 		res.status(100).send({message: 'Đã đăng nhập'});
 	}
-	
-	var un = req.params.u;
-	var pw = req.params.p;
-
-	connect.load('select MaTK, Email, Ten \'TenCongTy\' from TaiKhoan, CongTy where MaCty = MaCty '+
+	//res.status(100).send({message: 'Đã đăng nhập'});
+	var un = req.body.u;
+	var pw = req.body.p;
+	console.log(req.body);
+	return connect.load('select MaTK, Email, Ten \'TenCongTy\' from TaiKhoan, CongTy where TaiKhoan.MaCty = CongTy.MaCty '+
 		'and Email like \''+un+'\' and Password like \''+pw+'\'')
 	.then(users => {
 		if(users.lenth === 0){
+			console.log("123456");
 			res.status(400).send({ message: 'Đăng nhập thất bại' });
 		}else if(users[0].Email == un && users[0].Password == pw){
 			res.session.Email = users[0].Email; 
+			console.log(users[0]);
 			res.status(200).send(users[0]);
 		}else {
+			console.log("456789");
 			res.status(400).send({ message: 'Đăng nhập thất bại' });
 		}
 	})
@@ -44,6 +47,16 @@ exports.register = function(req, res) {
 
 exports.testConnectDB = function(req, res) {
 	connect.load('SELECT sqrt(72) test')
+	.then(user =>{
+		console.log(user);
+		res.status(200).send(user);
+	})
+	.catch((error) => res.status(400).send(error));
+}
+
+
+exports.showAll = function(req, res) {
+	connect.load('SELECT * from TaiKhoan')
 	.then(user =>{
 		console.log(user);
 		res.status(200).send(user);

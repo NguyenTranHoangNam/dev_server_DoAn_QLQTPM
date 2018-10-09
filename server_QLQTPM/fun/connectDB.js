@@ -13,7 +13,7 @@ exports.load = function(sql) {
 
 		connection.connect();
 
-		connection.query(sql, (error,results,fields) => {
+		return connection.query(sql, (error,results,fields) => {
 			if(error) 
 				reject(error);
 			else resolve(results);
