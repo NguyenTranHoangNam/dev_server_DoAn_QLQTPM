@@ -1,5 +1,7 @@
 var connect = require('./connectDB');
 
+var session = require('express-session')
+
 exports.login = function(req, res){
 	if(req.session.Email){
 		res.status(100).send({message: 'Đã đăng nhập'});
