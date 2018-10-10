@@ -8,9 +8,9 @@ exports.login = function(req, res){
 	}else{
 		var un = req.body.u;
 		var pw = req.body.p;
-		console.log('select MaTK, Email, Password from TaiKhoan where '+
+		console.log('select ComID, Email, Password, Username, PhoneNumber from AccountCompany where '+
 			'Email like \''+un+'\' and Password like \''+pw+'\'');
-		connect.load('select MaTK, Email, Password from TaiKhoan where '+
+		connect.load('select ComID, Email, Password, Username, PhoneNumber from AccountCompany where '+
 			'Email like \''+un+'\' and Password like \''+pw+'\'')
 		.then(users => {
 			console.log(JSON.stringify(users));
@@ -35,10 +35,11 @@ exports.register = function(req, res) {
 
 	let email = req.body.email;
 	let pw = req.body.pw;
-	let f_name = req.body.fname;
-	let l_name = req.body.lname;
+	let f_name = req.body.uname;
+	let phone = req.body.phone;
+	let com = req.body.comid;
 
-	connect.load('insert into TaiKhoan(TenHienThi, Email, Password) values(\''+f_name+' '+l_name+'\', \''+email+'\',\''+pw+'\');')
+	connect.load('insert into AccountCompany(Username, Email, Password, PhoneNumber, ComID) values(\''+f_name+' '+email+'\',\''+pw+'\',\''+phone+'\',\''+com+'\');')
 	.then(() => {
 		res.status(200).send({message: 'Tạo tài khoản thành công.'});
 	})
@@ -47,16 +48,15 @@ exports.register = function(req, res) {
 
 exports.testConnectDB = function(req, res) {
 	connect.load('SELECT sqrt(72) test')
-	.then(user =>{
-		console.log(user);
-		res.status(200).send(user);
+	.then(query =>{
+		res.status(200).send(JSON.stringify(query));
 	})
 	.catch((error) => res.status(400).send(error));
 }
 
 
 exports.showAll = function(req, res) {
-	connect.load('SELECT * from TaiKhoan')
+	connect.load('SELECT * from AccountCompany')
 	.then(user =>{
 		console.log(user);
 		res.status(200).send(user);

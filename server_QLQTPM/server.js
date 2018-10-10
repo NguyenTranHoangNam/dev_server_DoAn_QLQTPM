@@ -10,7 +10,7 @@ var num_port = 1742;
 var port = process.env.port || num_port;
 
 
-
+var company = require('./fun/companyController');
 var user = require('./fun/userController');
 
 app.use(bodyparser.urlencoded({extended: true}));
@@ -20,30 +20,24 @@ app.use(session({secret: 'QLPM'}));
 app.route('/')
 .get(user.showAll);
 
-app.route('/login')
-.post(user.login);
+// API relate user
+app.route('/login') 
+.post(user.login); // accept: u (username), p (password)
 
-app.route('/register')
-.post(user.register);
+app.route('/register') 
+.post(user.register); // accept: uname (username), email, password, phone, comid
 
 app.route('/logout')
-.get()
-.post()
-.put()
-.delete();
+.get(user.logout);
 
 app.route('/logged')
 .get(user.checkLoggedIn);
 
+// API relate company
+app.route('/getlistcompany')
+.get(company.getListCompany);
+
 app.listen(port);
+
 console.log("Link server: "+require("ip").address()+":" + process.env.port + " and "+require("ip").address()+":" + num_port);
-
-// user.showAll();
 console.log("Running server!!!");
-
-
-/*http.createServer(function (req, res) {
-    res.writeHead(200, { 'Content-Type': 'application/json' }); //'text/html' });
-    res.end(JSON.stringify());
-    console.log(req.url.split("?")[0]);
-});*/
