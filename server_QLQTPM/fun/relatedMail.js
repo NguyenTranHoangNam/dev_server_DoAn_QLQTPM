@@ -2,7 +2,17 @@ var nodemailer = require('nodemailer');
 
 
 /*
-
+api to send mail
+input: info = {
+  // ex: gmail
+  host: "smtp.gmail.com",
+  port: 587,
+  email_send: "user_name@do.main"
+  password: "password_email_of_email_send",
+  email_receive: "user_name@do.main",
+  subject: "title_of_email",
+  text: "content_of_email"
+}
 */
 exports.sendMail = function(info) {
   var transporter = nodemailer.createTransport({
