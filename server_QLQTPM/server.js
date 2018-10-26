@@ -1,7 +1,9 @@
 ﻿
 var express = require('express'),
 session = require('express-session'),
-bodyparser = require('body-parser');
+bodyparser = require('body-parser'),
+morgan = require('morgan'),
+cors = require('cors');
 var app = express();
 
 var num_port = 1742;
@@ -14,7 +16,8 @@ app.use(bodyparser.json());
 app.use(session({secret: 'QLPM'}));
 
 
-app.use('/user', require('./controller/userCtrl'));
+app.use('/user', require('./link/userListen'));
+app.use('/company', require('./link/companyListen'));
 
 app.listen(port, () =>{
 	console.log("Link server: "+require("ip").address()+":" + port);

@@ -1,4 +1,4 @@
-var connect = require('./connectDB');
+var connect = require('../api_other/db');
 
 var session = require('express-session')
 
@@ -56,9 +56,8 @@ exports.testConnectDB = function(req, res) {
 
 
 exports.showAll = function(req, res) {
-	connect.load('SELECT * from CompanyInfo')
+	connect.load('SELECT * from AccountCompany')
 	.then(user =>{
-		console.log(user);
 		res.status(200).send(JSON.stringify(user));
 	})
 	.catch((error) => res.status(400).send(error));

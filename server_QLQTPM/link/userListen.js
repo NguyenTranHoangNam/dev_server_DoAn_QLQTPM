@@ -1,4 +1,4 @@
-var user = require('../repos/userController.js'),
+var user = require('../process/userProcess'),
 	express = require('express');
 
 var router = express.Router();
@@ -18,9 +18,5 @@ router.route('/logout')
 
 router.route('/logged')
 .get(user.checkLoggedIn);
-
-// API relate company
-router.route('/getlistcompany')
-.get(company.getListCompany);
 
 module.exports = router;
