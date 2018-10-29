@@ -8,7 +8,6 @@ router.route('/')
 .get(company.getListCompany)
 .post(company.add); // id:... name:... comid:...
 
-
 router.route('/:id')
 .get(company.getCompany)
 .delete(company.delete);

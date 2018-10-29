@@ -1,4 +1,4 @@
-var company = require('../process/companyProcess'),
+var mail = require('../process/mailProcess'),
 	express = require('express');
 
 var router = express.Router();

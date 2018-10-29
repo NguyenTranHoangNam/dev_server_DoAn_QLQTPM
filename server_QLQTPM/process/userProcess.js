@@ -13,7 +13,7 @@ exports.login = function(req, res){
 		connect.load('select ComID, Email, Password, Username, PhoneNumber from AccountCompany where '+
 			'Email like \''+un+'\' and Password like \''+pw+'\'')
 		.then(users => {
-			console.log(JSON.stringify(users));
+			//console.log(JSON.stringify(users));
 			if(users.lenth === 0){
 				res.status(400).send({ message: 'Đăng nhập thất bại' });
 			}else if(users[0].Email == un && users[0].Password == pw){
