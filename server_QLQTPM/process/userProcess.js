@@ -8,8 +8,6 @@ exports.login = function(req, res){
 	}else{
 		var un = req.body.u;
 		var pw = req.body.p;
-		console.log('select ComID, Email, Password, Username, PhoneNumber from AccountCompany where '+
-			'Email like \''+un+'\' and Password like \''+pw+'\'');
 		connect.load('select ComID, Email, Password, Username, PhoneNumber from AccountCompany where '+
 			'Email like \''+un+'\' and Password like \''+pw+'\'')
 		.then(users => {

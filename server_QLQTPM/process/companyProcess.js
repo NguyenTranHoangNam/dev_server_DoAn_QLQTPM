@@ -13,7 +13,7 @@ exports.getListCompany = function(req,res) {
 }
 
 exports.getCompany = function(req,res) {
-	connect.load('select  * from CompanyInfo where Id = 'req.params.id)
+	connect.load(`select  * from CompanyInfo where Id = '${req.params.id}'`)
 	.then(company =>{
 		//console.log(company);
 		if(company.length > 0){

@@ -1,6 +1,6 @@
 var connect = require('../api_other/db'),
 mail = require('../api_other/mail'),
-fromidable = require('formidablle'),
+fromidable = require('formidable'),
 fs = require('fs');
 
 exports.sentMail = function(req,res) {
@@ -23,7 +23,9 @@ exports.sentMail = function(req,res) {
 			}
 		})
 		.catch((error) => res.status(400).send(error));
-	})
+	});
+}
 
-	mail.sendMail()
+exports.emailReceive = function(req,res) {
+	mail.receiveMail(res);
 }

@@ -1,11 +1,12 @@
 var mail = require('../process/mailProcess'),
-	express = require('express');
+	express = require('express'),
+	company = require('../process/companyProcess');
 
 var router = express.Router();
 
 // API relate company
 router.route('/')
-.get(company.getListCompany)
+.get(mail.emailReceive)
 .post(company.add); // id:... name:... comid:...
 
 
