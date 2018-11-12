@@ -9,19 +9,49 @@ const server = http.Server(app);
 wss = require("socket.io")(server);
 //app.on('upgrade', wss.handleUpgrade);
 
+var listActing=[];
+
 wss.on('connection', function(socket) {
 	console.log(`${socket.id} ket noi toi`);
 
+	// event khi client ngắt kết nối với server socket
 	socket.on('disconnect',function() {
 		console.log(`${socket.id} ngat ket noi`);
+		listActing.splice(listActing.indexOf(socket.userName), 1);
+		console.log(socket.userName);
+		wss.sockets.emit("list-user", listActing);
 	});
 
-	socket.on('client-sent', function(arg) {
-		var data = JSON.parse(arg);
-		if(data.message.length != 0)
-			socket.broadcast.emit('server-sent',JSON.stringify(arg));
+	// khi client gửi email đã đăng nhập (email) cho server 
+	socket.on('info-login', function(arg) {
+		// khi phát hiện đã phát hiện trung tên client (có ng khác login thì cho out)
+		if(listActing.indexOf(arg)>=0){
+			console.log(arg);
+			socket.emit("login-false");
+		}else{
+			listActing.push(arg);
+			socket.userName=arg;
+			//socket.emit("login-true");
+			wss.sockets.emit("list-user", listActing);
+		}
+	});
 
-		console.log(`${socket.id}: ${JSON.stringify(arg)}`);
+	// khi client muốn ngắt kết nối với server
+	socket.on('logout',function() {
+		listActing.splice(listActing.indexOf(socket.userName), 1);
+		console.log(socket.userName);
+		wss.sockets.emit("list-user", listActing);
+	});
+
+
+	// khi client gửi tin nhắn cho server 
+	socket.on('client-sent', function(arg) {
+		if(arg.length == 0) return;
+
+		socket.emit('server-sent',{name: socket.userName, message: arg});
+		// gửi cho toàn bộ client đang kết nối tới server
+		socket.broadcast.emit('server-sent',{name: socket.userName, message: arg});
+		console.log(`${socket.id}: ${arg}`);
 	});
 });
 
