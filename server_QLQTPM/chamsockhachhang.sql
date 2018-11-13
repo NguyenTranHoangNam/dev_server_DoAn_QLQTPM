@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Oct 26, 2018 at 11:40 AM
--- Server version: 8.0.13
--- PHP Version: 7.2.10-0ubuntu0.18.04.1
+-- Generation Time: Nov 13, 2018 at 10:04 AM
+-- Server version: 5.7.23
+-- PHP Version: 7.2.10
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -25,185 +25,73 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `AccountCompany`
+-- Table structure for table `chat_message`
 --
 
-CREATE TABLE `AccountCompany` (
-  `ComID` int(11) NOT NULL,
-  `Email` varchar(255) NOT NULL,
-  `Password` varchar(50) NOT NULL,
-  `Username` varchar(255) NOT NULL,
-  `PhoneNumber` varchar(10) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `CompanyInfo`
---
-
-CREATE TABLE `CompanyInfo` (
-  `Id` int(11) NOT NULL,
-  `CompanyName` varchar(255) NOT NULL,
-  `ComID` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `CompanyInfo`
---
-
-INSERT INTO `CompanyInfo` (`Id`, `CompanyName`, `ComID`) VALUES
-(1, 'COmPany1', 1);
+DROP TABLE IF EXISTS `chat_message`;
+CREATE TABLE IF NOT EXISTS `chat_message` (
+  `id_room` int(11) NOT NULL,
+  `id_user` int(11) NOT NULL,
+  `message` longtext COLLATE utf8_unicode_ci NOT NULL,
+  `time_sent` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id_room`,`time_sent`,`id_user`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `Mail`
+-- Table structure for table `chat_room`
 --
 
-CREATE TABLE `Mail` (
-  `ID` int(11) NOT NULL,
-  `Subject` varchar(255) NOT NULL,
-  `Content` text NOT NULL,
-  `Requester` varchar(255) NOT NULL,
-  `Assigner` varchar(255) NOT NULL,
-  `SendTime` datetime NOT NULL,
-  `TypeID` int(11) NOT NULL,
-  `PriorityID` int(11) NOT NULL,
-  `StatusID` int(11) NOT NULL,
-  `AttachFile` text,
-  `UserID` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+DROP TABLE IF EXISTS `chat_room`;
+CREATE TABLE IF NOT EXISTS `chat_room` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(256) COLLATE utf8_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `Messages`
+-- Table structure for table `chat_user`
 --
 
-CREATE TABLE `Messages` (
-  `TopicID` int(11) NOT NULL,
-  `SenderID` int(11) NOT NULL,
-  `ReceiverID` int(11) NOT NULL,
-  `SendTime` datetime NOT NULL,
-  `Content` text NOT NULL,
-  `TypeID` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `Status`
---
-
-CREATE TABLE `Status` (
-  `StatusID` int(11) NOT NULL,
-  `StatusName` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+DROP TABLE IF EXISTS `chat_user`;
+CREATE TABLE IF NOT EXISTS `chat_user` (
+  `id_room` int(11) NOT NULL,
+  `id_user` int(11) NOT NULL,
+  `time_seen` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id_room`,`id_user`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `Topic`
+-- Table structure for table `congty`
 --
 
-CREATE TABLE `Topic` (
-  `IP` text NOT NULL,
-  `VisitorName` text NOT NULL,
-  `UnreadMessageCount` int(11) NOT NULL,
-  `ServedID` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+DROP TABLE IF EXISTS `congty`;
+CREATE TABLE IF NOT EXISTS `congty` (
+  `MaCty` int(11) NOT NULL AUTO_INCREMENT,
+  `Ten` varchar(256) COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`MaCty`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `Visitor`
+-- Table structure for table `taikhoan`
 --
 
-CREATE TABLE `Visitor` (
-  `IP` int(11) NOT NULL,
-  `Name` int(11) NOT NULL,
-  `Email` int(11) NOT NULL,
-  `Phone` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Indexes for dumped tables
---
-
---
--- Indexes for table `AccountCompany`
---
-ALTER TABLE `AccountCompany`
-  ADD PRIMARY KEY (`ComID`);
-
---
--- Indexes for table `CompanyInfo`
---
-ALTER TABLE `CompanyInfo`
-  ADD PRIMARY KEY (`Id`);
-
---
--- Indexes for table `Mail`
---
-ALTER TABLE `Mail`
-  ADD PRIMARY KEY (`ID`);
-
---
--- Indexes for table `Status`
---
-ALTER TABLE `Status`
-  ADD PRIMARY KEY (`StatusID`);
-
---
--- Indexes for table `Visitor`
---
-ALTER TABLE `Visitor`
-  ADD PRIMARY KEY (`IP`);
-
---
--- AUTO_INCREMENT for dumped tables
---
-
---
--- AUTO_INCREMENT for table `AccountCompany`
---
-ALTER TABLE `AccountCompany`
-  MODIFY `ComID` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `CompanyInfo`
---
-ALTER TABLE `CompanyInfo`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-
---
--- AUTO_INCREMENT for table `Mail`
---
-ALTER TABLE `Mail`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `Status`
---
-ALTER TABLE `Status`
-  MODIFY `StatusID` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `Visitor`
---
-ALTER TABLE `Visitor`
-  MODIFY `IP` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- Constraints for dumped tables
---
-
---
--- Constraints for table `AccountCompany`
---
-ALTER TABLE `AccountCompany`
-  ADD CONSTRAINT `AccountCompany_ibfk_1` FOREIGN KEY (`ComID`) REFERENCES `CompanyInfo` (`id`);
+DROP TABLE IF EXISTS `taikhoan`;
+CREATE TABLE IF NOT EXISTS `taikhoan` (
+  `MaTK` int(11) NOT NULL AUTO_INCREMENT,
+  `Email` varchar(128) COLLATE utf8_unicode_ci NOT NULL,
+  `Password` varchar(128) COLLATE utf8_unicode_ci NOT NULL,
+  `MaCty` int(11) DEFAULT NULL,
+  PRIMARY KEY (`MaTK`),
+  UNIQUE KEY `Email` (`Email`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
