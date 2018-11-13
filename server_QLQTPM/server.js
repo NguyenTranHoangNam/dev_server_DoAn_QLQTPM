@@ -21,7 +21,7 @@ app.use('/company', require('./link/companyListen'));
 app.use('/chat', require('./link/chatListen'));
 app.use('/mail', require('./link/mailListen'));
 
-require('./process/chatProcess');
+require('./link/chatListen');
 
 app.listen(port, () =>{
 	console.log("Link server: "+require("ip").address()+":" + port);
