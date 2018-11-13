@@ -59,6 +59,7 @@ wss.on('connection', function(socket) {
 
 	socket.on('add-room', (data) => {
 		console.log("Request add room with name "+data);
+		console.log(db.createRoom(data));
 		socket.join(data);
 		socket.m_room = data;
 
