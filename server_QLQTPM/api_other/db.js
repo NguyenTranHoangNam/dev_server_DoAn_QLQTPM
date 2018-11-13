@@ -1,16 +1,20 @@
 var mysql = require('mysql');
 
-var connection = mysql.createConnection({
-	host: 'localhost',
+var infoConnect = {
+	host: 'www.db4free.net',
 	port: '3306',
-	user: 'root',
-	password: '',
-	database: 'chamsockhachhang',
-});
+	user: 'teamnat',
+	password: 'abcghi2356',
+	database: 'chamsockhachhang'
+};
 
 
 exports.load = function(sql) {
 	return new Promise((resolve, reject) => {
+		var connection = mysql.createConnection({
+			host: infoConnect.host,	port: infoConnect.port, user: infoConnect.user, password: infoConnect.password, database: infoConnect.database
+		});
+		
 		connection.connect();
 
 		return connection.query(sql, (error,results,fields) => {
@@ -23,15 +27,19 @@ exports.load = function(sql) {
 	});
 }
 exports.write = function(sql) {
-    return new Promise((resolve, reject) => {
-        connection.connect();
+	return new Promise((resolve, reject) => {
+		var connection = mysql.createConnection({
+			host: infoConnect.host,	port: infoConnect.port, user: infoConnect.user, password: infoConnect.password, database: infoConnect.database
+		});
 
-        connection.query(sql, (error, value) => {
-            if (error)
-                reject(error);
-            else resolve(value);
+		connection.connect();
 
-            connection.end();
-        });
-    });
+		connection.query(sql, (error, value) => {
+			if (error)
+				reject(error);
+			else resolve(value);
+
+			connection.end();
+		});
+	});
 }
