@@ -78,3 +78,17 @@ exports.checkLoggedIn = function(req,res){
 		res.status(400).sent({loggedin: 'false'});
 	}
 }
+
+
+exports.convertEmailToId = function(email) {
+	connect.load(`SELECT tk.MaTK FROM taikhoan tk WHERE tk.Email like '${partner}'`)
+	.then(row =>{
+		if(row.length ==1){
+			return row[0].MaTK;
+		}
+		return '-1';
+	})
+	.catch(error => {
+		return '-1';
+	})
+}
