@@ -145,8 +145,22 @@ wss.on('connection', function(socket) {
 				socket.m_room = row[0].id_room;
 				db.updateDateSeenRoomOfUser(socket.m_room, socket.m_name);
 				socket.emait("server-get-message-in-room", JSON.stringify(db.getAllMessageInRoom(socket.m_room)));
-			}else{
-				
+			}else if(row.length == 0){
+				db.createRoom("")
+				.then(value => {
+					console.log("added room with key: "+value.insertId);
+					socket.join(value.insertId)
+
+					db.addUserToRoom(value.insertId, email_partner)
+					.catch(error => {
+						console.log("Error when add user to room");
+					});
+
+					listClient[i].join(value.insertId);
+				})
+				.catch(error => {
+					console.log(error);
+				});
 			}
 		});
 	});

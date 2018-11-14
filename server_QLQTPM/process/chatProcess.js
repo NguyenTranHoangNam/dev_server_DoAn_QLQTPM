@@ -21,7 +21,7 @@ exports.getAllMessageInRoom = function(room_name) {
 
 exports.saveMessage = function(room_id, email, content_message) {
 	return db.write(`INSERT INTO chat_message(id_room, id_user, message) VALUES ` + 
-		`((SELECT id FROM chat_room WHERE name LIKE '${room_name}'), ` +
+		`('${room_id}', ` +
 		`'${user.convertEmailToId(email)}', ` +
 		`'${content_message}');`);
 }

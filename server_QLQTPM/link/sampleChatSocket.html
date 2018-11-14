@@ -54,7 +54,7 @@
 			console.log(arg);
 			$('.list-room').html("");
 			arg.forEach(function(i) {
-				$('.list-room').prepend(`<div class='room'>${i.room_name}</div>`);
+				$('.list-room').prepend(`<div><div id='roomid'>${i.room_id}</div><div class='room'>${i.room_name}</div></div>`);
 			});
 		});
 
@@ -82,7 +82,7 @@
 			});
 
 			$('.room').click(function() {
-				socket.emit("get_history_message", $(this).text());
+				socket.emit("get_history_message", $(this).parent().find('#roomid').text());
 			});
 
 			$('#send').click(function() {
