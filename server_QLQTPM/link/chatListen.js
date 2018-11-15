@@ -57,7 +57,7 @@ wss.on('connection', function(socket) {
 				if( list.length!=undefined){
 					for (var i = list.length - 1; i >= 0; i--) {
 						if(list[i].room_name == null){
-							db.getNameRoomWhenRoomNullName(list[i].room_id, socket.m_name);
+							list[i].room_name = db.getNameRoomWhenRoomNullName(list[i].room_id, socket.m_name);
 						}
 
 						socket.join(list[i].room_id);
@@ -163,6 +163,11 @@ wss.on('connection', function(socket) {
 				});
 			}
 		});
+	});
+
+	socket.on('change-name-room', (room_name_new) => {
+		db.changeRoomName(socket.m_room, room_name_new);
+
 	});
 });
 

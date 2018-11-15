@@ -1,37 +1,45 @@
 var db = require('../api_other/db');
-var user = require('./userProcess');
+var check = require('validator');
 
-exports.getListRoomOfUser = function(email) {
-	return db.load(`SELECT r.id 'room_id', r.name 'room_name', tk.Email, m.message, MAX(m.time_sent) 'time_sent_last', if(MAX(m.time_sent)<time_seen, 'true', 'false') 'seen_all' ` +
-		`FROM chat_room r, chat_user u, taikhoan tk, chat_message m ` +
-		`WHERE r.id = u.id_room AND u.id_room = m.id_room AND u.id_user = m.id_user ` +
-		`AND tk.MaTK = m.id_user AND tk.Email like '${email}' ` +
-		`GROUP BY r.name ` +
-		`ORDER BY m.time_sent DESC`);
+exports.isEmail = function(email) {
+	return check.isEmail(email);
+}
+
+exports.getListRoomOfUser = function(user) {
+	return db.load(`SELECT r.id 'room_id', r.name 'room_name', m.account, m.message, MAX(m.time_send) 'time_sent_last', if(MAX(m.time_send)<u.time_seen, 'true', 'false') 'seen_all'
+		FROM chat_room r, chat_user u, chat_message m
+		WHERE r.id = u.room_id AND u.room_id = m.room_id AND u.account = m.account
+        AND m.account like '${user}'
+		GROUP BY r.name
+		ORDER BY m.time_send DESC`);
 }
 
 exports.getAllMessageInRoom = function(room_name) {
-	return db.load(`SELECT r.id 'room_id', r.name 'room_name', tk.Email, m.message, m.time_sent ` +
-		`FROM chat_room r, chat_user u, taikhoan tk, chat_message m ` +
-		`WHERE r.id = u.id_room AND u.id_room = m.id_room AND u.id_user = m.id_user ` +
-		`AND tk.MaTK = m.id_user AND r.name like '${room_name}' ` +
-		`GROUP BY r.name ` +
-		`ORDER BY m.time_sent DESC`);
+	return db.load(`SELECT r.id 'room_id', r.name 'room_name', u.account, m.message, m.time_send 
+		FROM chat_room r, chat_user u, chat_message m 
+		WHERE r.id = u.room_id AND u.room_id = m.room_id AND u.account = m.account 
+		AND r.name like '${room_name}' 
+		GROUP BY r.name 
+		ORDER BY m.time_send DESC`);
 }
 
-exports.saveMessage = function(room_id, email, content_message) {
-	return db.write(`INSERT INTO chat_message(id_room, id_user, message) VALUES ` + 
-		`('${room_id}', ` +
-		`'${user.convertEmailToId(email)}', ` +
-		`'${content_message}');`);
+exports.saveMessage = function(room_id, user, content_message) {
+	return db.write(`INSERT INTO chat_message(room_id, account, message) VALUES ('${room_id}', '${user}', '${content_message}');`);
 }
 
 exports.createRoom = function(room_name) {
 	return db.write(`INSERT INTO chat_room(name) VALUES ('${room_name}')`);
 }
 
-exports.getListUserInRoomNotExistUserCurrent = function(room_id, email_current) {
-	return db.load(`SELECT Email FROM taikhoan tk WHERE MaTK IN (SELECT id_user FROM chat_user WHERE id_room = '${room_id}') AND Email != '${email_current}';`);
+exports.changeRoomName = function(room_id, room_name_new) {
+	return db.write(`UPDATE chat_room SET name = '${room_name_new}' WHERE id = '${room_id}';`);
+}
+
+exports.getListUserInRoomNotExistUserCurrent = function(room_id, user_current) {
+	return db.load(`SELECT account 
+					FROM chat_user 
+					WHERE room_id = '${room_id}'
+					AND account != '${user_current}';`);
 }
 
 exports.getNameRoomWhenRoomNullName = function(room_id, email_current) {
@@ -54,29 +62,34 @@ exports.getNameRoomWhenRoomNullName = function(room_id, email_current) {
 	});
 }
 
-exports.updateDateSeenRoomOfUser = function(id_room, email_current) {
-	return db.write(`UPDATE chat_user SET time_seen = CURRENT_TIMESTAMP WHERE id_room = '${in_room}' AND id_user = '${user.convertEmailToId(email_current)}'`);
+exports.updateDateSeenRoomOfUser = function(id_room, user_current) {
+	return db.write(`UPDATE chat_user 
+					SET time_seen = CURRENT_TIMESTAMP 
+					WHERE room_id = '${in_room}' 
+						AND account = '${user_current}'`);
 }
 
-exports.addUserToRoom = function(room_id, username) {
-	return db.write(`INSERT INTO chat_user(id_room, id_user, time_seen) VALUES ('${room_id}','${user.convertEmailToId(username)}', CURRENT_TIMESTAMP);`);
+exports.addUserToRoom = function(room_id, user) {
+	return db.write(`INSERT INTO chat_user(room_id, account, time_seen) VALUES ('${room_id}','${user}', CURRENT_TIMESTAMP);`);
 }
 
-exports.checkUserInRoom = function(room_id, email) {
-	return db.load(`SELECT * FROM chat_user WHERE id_room = '${room_id}' AND id_user = '${user.convertEmailToId(email)}';)`);
+exports.checkUserInRoom = function(room_id, user) {
+	return db.load(`SELECT * FROM chat_user 
+					WHERE room_id = '${room_id}' 
+					AND account = '${user}';`);
 }
 
-exports.getRoomWithPartner = function(email_current, partner) {
-	return db.load(`SELECT chat_user.id_room, COUNT(chat_user.id_user) ` +
-		`FROM chat_user `+
-		`WHERE chat_user.id_room IN (SELECT c1.id_room `+
-									`FROM chat_user c1 `+
-									`WHERE c1.id_user = '${user.convertEmailToId(email_current)}') `+
-		`AND chat_user.id_room IN (SELECT c1.id_room `+
-									`FROM chat_user c1 `+
-									`WHERE c1.id_user = '${user.convertEmailToId(email_current)}') `+
-		`GROUP BY chat_user.id_room `+
-		`HAVING COUNT(chat_user.id_user) = 2;`);
+exports.getRoomWithPartner = function(user_current, partner) {
+	return db.load(`SELECT chat_user.room_id, COUNT(chat_user.account) 
+					FROM chat_user 
+					WHERE chat_user.room_id IN (SELECT c1.room_id 
+												FROM chat_user c1 
+												WHERE c1.account = '${user_current}') 
+					AND chat_user.room_id IN (SELECT c1.room_id 
+												FROM chat_user c1 
+												WHERE c1.account = '${partner}') 
+					GROUP BY chat_user.room_id
+					HAVING COUNT(chat_user.account) = 2;`);
 }
 
 // hàm tạm trong thời gian ngằn

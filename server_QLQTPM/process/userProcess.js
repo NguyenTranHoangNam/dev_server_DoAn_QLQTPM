@@ -81,7 +81,7 @@ exports.checkLoggedIn = function(req,res){
 
 
 exports.convertEmailToId = function(email) {
-	connect.load(`SELECT tk.MaTK FROM taikhoan tk WHERE tk.Email like '${partner}'`)
+	connect.load(`SELECT tk.MaTK FROM AccountCompany tk WHERE tk.Email like '${partner}'`)
 	.then(row =>{
 		if(row.length ==1){
 			return row[0].MaTK;
