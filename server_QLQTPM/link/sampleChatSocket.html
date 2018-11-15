@@ -14,15 +14,23 @@
 		var socket = io('http://localhost:2018', {transports: ['websocket', 'polling', 'flashsocket']});
 		socket.close();
 
-		if(user_login && !socket.connected) {
+		if(user_login && socket.status) {
 			socket.open();
-			socket.emit('login',$('#user').val());
+			socket.emit('login', socket.m_name);
 		}
+
+		socket.on('server-get-message-in-room', function(arg) {
+			console.log(arg);
+
+			$('.messages').html("");
+			for (var i = 0; i < arg.length; i++) {
+				$('.messages').prepend(`<p><b>${arg[i].account}: </b><i>${arg[i].message}</i><i style="font-size: 50%; float: right;">${arg[i].time_send}</i></p>`);
+			}
+		});
 
 		socket.on('check-name'), function(arg) {
 			socket.open();
-			alert($('#user').val());
-			socket.emit('login',$('#user').val());
+			socket.emit('login', socket.m_name);
 		};
 
 		socket.on('server-sent', function(obj) {
@@ -53,9 +61,9 @@
 		socket.on("list-room", function(arg) {
 			console.log(arg);
 			$('.list-room').html("");
-			arg.forEach(function(i) {
-				$('.list-room').prepend(`<div><div id='roomid'>${i.room_id}</div><div class='room'>${i.room_name}</div></div>`);
-			});
+			for (var i = 0; i < arg.length; i++) {
+				$('.list-room').prepend(`<div><div id='roomid' style="display: none;">${arg[i].room_id}</div><div class='room'>${arg[i].room_name}</div></div>`);
+			}
 		});
 
 		$(document).ready(function() {
@@ -64,7 +72,9 @@
 
 			$('#logIn').click(function() {
 				socket.open();
-				socket.emit('login',$('#user').val());
+				socket.m_name = $('#user').val();
+				console.log(socket.m_name);
+				socket.emit('login', socket.m_name);
 				user_login = true;
 			});
 
@@ -81,7 +91,7 @@
 				user_login = false;
 			});
 
-			$('.room').click(function() {
+			$(document).on('click', '.room', function() {
 				socket.emit("get_history_message", $(this).parent().find('#roomid').text());
 			});
 
@@ -89,12 +99,23 @@
 				if($('#message').val().length == 0) return;
 				socket.emit('client-sent', $('#message').val());
 			});
+			
+			$('#test').click(function() {
+				alert($(this).parent().find('div').text());
+			});
+
+			$(document).on('click', '.user', function() {
+				alert($(this).text());
+				socket.emit("get_history_with", $(this).text());
+			});
 		});
 	</script>
 </head>
 <body>
 	<div id="login" class="container-fluid"  style="background-color: #f5d1db; padding: 5px; text-align: center;">
 		<input type="text" id="user" placeholder="Name?">
+		<div style="display: none;">abcghi</div>
+		<button id="test">test</button>
 		<button id="logIn">Log In</button>
 		<p id="logInMessage" style="color: red;"></p>
 	</div>
