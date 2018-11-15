@@ -167,7 +167,25 @@ wss.on('connection', function(socket) {
 
 	socket.on('change-name-room', (room_name_new) => {
 		db.changeRoomName(socket.m_room, room_name_new);
-
+		for (var i = 0; i < listClient.length; i++) {
+			db.getListRoomOfUser(listClient[i].m_name)
+			.then(rows => {
+				var list = JSON.stringify(rows)
+				//console.log(Object.keys(list).length + list);
+				if( list.length!=undefined){
+					for (var i = list.length - 1; i >= 0; i--) {
+						if(list[i].room_name == null){
+							list[i].room_name = db.getNameRoomWhenRoomNullName(list[i].room_id, socket.m_name);
+						}
+					}
+					listClient[i].emit('list-room', list);
+				}
+				//console.log(JSON.stringify(rows));
+			})
+			.catch(error => {
+				console.log(error);
+			});
+		}
 	});
 });
 
