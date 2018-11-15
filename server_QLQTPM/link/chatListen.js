@@ -47,17 +47,7 @@ wss.on('connection', function(socket) {
 			.then(rows => {
 				if(rows.length!=undefined){
 					for (var i = rows.length - 1; i >= 0; i--) {
-						if(rows[i].room_name == ""){
-							me.getNameRoomWhenRoomNullName(rows[i].room_id, socket.m_name)
-							.then(value => {
-								console.log("string receive convert null " + value);
-							})
-							.catch(err => {
-								console.log(err);
-							});
-							console.log(`name changed `+rows[i].room_name);
-						}
-
+						rows[i].room_name = rows[i].room_name.replace(socket.m_name + ', ','').replace(', ' + socket.m_name,'');
 						socket.join(rows[i].room_id);
 					}
 					console.log(rows);
@@ -97,7 +87,7 @@ wss.on('connection', function(socket) {
 		// console.log(`${socket.m_name}: ${message}`);
 	});
 
-	// khi gửi yêu cầu tạo room chat thì gửi trước danh sách JSON người cùng chat
+	// khi gửi yêu cầu tạo room chat thì gửi trước danh sách Array người cùng chat
 	socket.on('add-room', (listUser) => {
 		console.log("Request add room with name "+listUser);
 		let list = JSON.parse(lisUser);
@@ -190,10 +180,6 @@ wss.on('connection', function(socket) {
 					var list = JSON.stringify(rows)
 					if( list.length!=undefined){
 						for (var i = list.length - 1; i >= 0; i--) {
-							if(list[i].room_name == null){
-								list[i].room_name = db.getNameRoomWhenRoomNullName(list[i].room_id, socket.m_name);
-							}
-
 							socket.join(list[i].room_id);
 						}
 						socket.emit('list-room', list);
@@ -212,17 +198,15 @@ wss.on('connection', function(socket) {
 
 	socket.on('change-name-room', (room_name_new) => {
 		db.changeRoomName(socket.m_room, room_name_new);
+
+		db.write()
+
 		for (var i = 0; i < listClient.length; i++) {
 			db.getListRoomOfUser(listClient[i].m_name)
 			.then(rows => {
 				var list = JSON.stringify(rows)
 				//console.log(Object.keys(list).length + list);
 				if( list.length!=undefined){
-					for (var i = list.length - 1; i >= 0; i--) {
-						if(list[i].room_name == null){
-							list[i].room_name = db.getNameRoomWhenRoomNullName(list[i].room_id, socket.m_name);
-						}
-					}
 					listClient[i].emit('list-room', list);
 				}
 				//console.log(JSON.stringify(rows));

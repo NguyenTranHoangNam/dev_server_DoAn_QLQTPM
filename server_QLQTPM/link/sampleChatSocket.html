@@ -19,6 +19,12 @@
 			socket.emit('login', socket.m_name);
 		}
 
+		socket.on('disconnect', function() {
+			$("#login").show();
+			$("#main").hide();
+			socket.close();
+		})
+
 		socket.on('server-get-message-in-room', function(arg) {
 			console.log(arg);
 

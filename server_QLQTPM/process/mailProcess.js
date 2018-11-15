@@ -6,7 +6,7 @@ fs = require('fs');
 exports.sendMail = function(req,res) {
 	var form = new formidable.IncomingForm();
 	form.parse(req, function(err, fields,files) {		
-		connect.load(`SELECT Email, PasswordMail, HostSmtpMail, PostSmtpMail FROM AccountCompany WHERE ComID = ${req.body.ComID}`)
+		connect.load(`SELECT Email, PasswordMail, HostSmtpMail, PostSmtpMail FROM AccountCompany WHERE Email = ${req.body.mailUser}`)
 		.then(users =>{
 			if(users.length === 1) {
 				var info = {

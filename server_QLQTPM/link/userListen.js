@@ -4,11 +4,12 @@ var user = require('../process/userProcess'),
 var router = express.Router();
 
 router.route('/')
-.get(user.showAll);
+.get(user.showAll)
+.post(user.update); // u (email - require), p 
 
 // API relate user
 router.route('/login') 
-.post(user.login); // accept: u (username), p (password)
+.post(user.login); // accept: u (username), p (passwordnew), 
 
 router.route('/register') 
 .post(user.register); // accept: uname (username), email, password, phone, comid

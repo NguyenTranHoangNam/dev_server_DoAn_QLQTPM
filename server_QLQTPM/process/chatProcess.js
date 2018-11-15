@@ -18,7 +18,7 @@ ORDER BY m.time_send DESC`;
 }
 
 exports.getAllMessageInRoom = function(room_name) {
-	sql=`SELECT r.id 'room_id', r.name 'room_name', u.account, m.message, m.time_send
+	sql=`SELECT u.account, m.message, m.time_send
 FROM chat_room r, chat_user u, chat_message m
 WHERE r.id = u.room_id AND u.room_id = m.room_id AND u.account = m.account
 AND r.id like '${room_name}'
