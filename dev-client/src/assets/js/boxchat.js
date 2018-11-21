@@ -1,8 +1,8 @@
 var me = {};
-me.avatar = "images/tv.png";
+me.avatar = "../assets/images/tv.png";
 
 var you = {};
-you.avatar = "images/user.png";
+you.avatar = "assets/images/user.png";
 
 function formatAMPM(date) {
     var hours = date.getHours();
@@ -64,9 +64,7 @@ $(".mytext").on("keydown", function(e){
     }
 });
 */
-$('.showshere').click(function(){
-    $(".mytext").trigger({type: 'keydown', which: 13, keyCode: 13});
-})
+
 
 //-- Clear Chat
 resetChat();
@@ -104,11 +102,12 @@ socket.on('message', arg => {
 });
 
 $(document).ready(function() {
+    
+    $('.showshere').click(function(){
+        $(".mytext").trigger({type: 'keydown', which: 13, keyCode: 13});
+    })
     $(document).on('click', '.btn.btn-info.btn-sm', function() {
-        console.log($(this).parent().parent().find('input').val());
-        alert( $('.nav.nav-user.navbar-top-links.navbar-right').text().split('\n')[13].trim());
-        
-        socket.emit('receive_request', {id: $(this).parent().parent().find('input').val(), name: $('.nav.nav-user.navbar-top-links.navbar-right').text().split('\n')[13].trim()});
+        socket.emit('receive_request', {id: $(this).parent().parent().find('input').val(), name: $('.tenname').text().trim()});
 
         $('h3.panel-title i').text($(this).parent().parent().find('.mail').text().trim());
         insertChat('me',$(this).parent().parent().find('.mesage').html().trim());

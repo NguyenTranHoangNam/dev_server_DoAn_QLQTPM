@@ -2,27 +2,56 @@ var connect = require('../api_other/db');
 var md5 = require('blueimp-md5');
 var session = require('express-session');
 
+// exports.login = function(req, res){
+// 	if(req.session.Email){
+// 		res.status(100).send({message: 'Đã đăng nhập'});
+// 	}else{
+// 		console.log(req.body);
+// 		var un = req.body.u;
+// 		var pw = req.body.p;
+// 		connect.load('select ComID, Email, Password, Username, PhoneNumber from AccountCompany where '+
+// 			'Email like \''+un+'\' and Password like \'md5('+pw+')\'')
+// 		.then(users => {
+// 			//console.log(JSON.stringify(users));
+// 			if(users.lenth == 0){
+// 				res.status(400).send({ message: 'Đăng nhập thất bại\nNhập sai email hoặc mật khẩu' });
+// 			} else if(users.lenth == 0 && users[0].Email == un && users[0].Password == md5(pw)){
+// 				req.session.Email = users[0].Email; 
+// 				users[0].Password = undefined;
+// 				res.status(200).send(JSON.stringify(users[0]));
+// 			}else {
+// 				res.status(400).send({ message: 'Đăng nhập thất bại' });
+// 			}
+// 		})
+// 		.catch((error) => res.status(400).send(error));
+// 	}
+// }
 exports.login = function(req, res){
 	if(req.session.Email){
 		res.status(100).send({message: 'Đã đăng nhập'});
 	}else{
 		var un = req.body.u;
 		var pw = req.body.p;
-		connect.load('select ComID, Email, Password, Username, PhoneNumber from AccountCompany where '+
-			'Email like \''+un+'\' and Password like \'MD5('+pw+')\'')
-		.then(users => {
+			console.log('select count(*) as sl,ComID, Email, Password, Username, PhoneNumber from AccountCompany where '+
+			'Email like \''+un+'\' and Password like \''+md5(pw)+'\'');
+		connect.load('select count(*) as sl,ComID, Email, Password, Username, PhoneNumber from AccountCompany where '+
+			'Email like \''+un+'\' and Password like \''+md5(pw)+'\'  group by ComID')
+		.then(users => { 
 			//console.log(JSON.stringify(users));
-			if(users.lenth == 0){
-				res.status(400).send({ message: 'Đăng nhập thất bại\nNhập sai email hoặc mật khẩu' });
-			} else if(users.lenth == 0 && users[0].Email == un && users[0].Password == md5(pw)){
+			console.log(JSON.stringify(users));
+			if(users.length === 0){
+				 res.json({success:0});
+				 //res.status(400).send({ message: 'Đăng nhập thất bại\nNhập sai email hoặc mật khẩu' });
+			}else if(users[0].Email == un && users[0].Password == md5(pw)){
 				req.session.Email = users[0].Email; 
 				users[0].Password = undefined;
 				res.status(200).send(JSON.stringify(users[0]));
 			}else {
-				res.status(400).send({ message: 'Đăng nhập thất bại' });
+				res.json({success:0});
+				//res.status(400).send({ message: 'Đăng nhập thất bại' });
 			}
 		})
-		.catch((error) => res.status(400).send(error));
+		.catch((error) => res.status(400).send({success:0}));
 	}
 }
 
