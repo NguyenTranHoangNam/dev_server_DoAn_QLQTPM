@@ -17,6 +17,14 @@ var listRequest = [];
 wss.on('connection', function(socket) {
 	console.log(`${socket.id} - ${socket.m_mail} ket noi toi`);
 
+
+	socket.on('disconnection', () => {
+		for (var i = 0; i < listRequest.length; i++) {
+			if(listRequest[i].id == socket.id)
+				listRequest[i].m_statu = 'exitted';
+		}
+	});
+
 	// user
 	function sendAllRequestCurrent() {
 		var list = [];
@@ -46,7 +54,7 @@ wss.on('connection', function(socket) {
 
 	socket.on('change_status', info => {
 		for (var i = 0; i < listRequest.length; i++) {
-			if(listRequest[i].id == socket.m_room) {
+			if(listRequest[i].id == socket.m_room && listRequest[i].statu != 'exitted') {
 				listRequest[i].m_statu =  info;
 			}
 		}
