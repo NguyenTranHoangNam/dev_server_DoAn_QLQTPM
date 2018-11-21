@@ -4,6 +4,7 @@ bodyparser = require('body-parser'),
 morgan = require('morgan'),
 cors = require('cors');
 var app = express();
+var mail = require('./process/mailProcess');
 
 var num_port = 1742;
 var port = process.env.port || num_port;
@@ -21,7 +22,7 @@ app.use('/company', require('./link/companyListen'));
 app.use('/mail', require('./link/mailListen'));
 
 require('./link/chatListen');
-
+mail.emailReceive();
 app.listen(port, () =>{
 	console.log("Link server: "+require("ip").address()+":" + port);
 	console.log("Running server!!!");
