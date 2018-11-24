@@ -11,16 +11,16 @@ exports.sendSupporters = function(arg) {
 		.then(users =>{
 			if(users.length === 1) {
 				var info = {
-					host: users[0].HostSmtpMail,
-					port: users[0].PostSmtpMail,
-					email_send: users[0].Email,
-					password_email_sent: users[0].PasswordMail,
+					email_send: 'htkh17hcb@gmail.com',
+					password_email_sent: '0908325568',
+					host: 'imap.gmail.com',
+					port: 993,
 					email_receive: arg.emailReceive,
 					subject: arg.subject,
 					content_mail: arg.content,
 					//attachments: files.filetoupload.path
 				};
-				mail.sendMail(info);
+				mail.sendMail(info,res);
 			}
 		})
 		.catch((error) => res.status(400).send(error));
@@ -30,37 +30,31 @@ exports.sendSupporters = function(arg) {
 exports.sendMail = function(req,res) {
 	var form = new formidable.IncomingForm();
 	form.parse(req, function(err, fields,files) {		
-		connect.load(`SELECT Email, PasswordMail, HostSmtpMail, PostSmtpMail FROM AccountCompany WHERE Email = ${req.body.mailUser}`)
-		.then(users =>{
-			if(users.length === 1) {
-				var info = {
-					host: users[0].HostSmtpMail,
-					port: users[0].PostSmtpMail,
-					email_send: users[0].Email,
-					password_email_sent: users[0].PasswordMail,
-					email_receive: req.body.emailReceive,
-					subject: req.body.subject,
-					content_mail: req.body.content,
-					//attachments: files.filetoupload.path
-				};
-				mail.sendMail(info);
-			}
-		})
-		.catch((error) => res.status(400).send(error));
+		var info = {
+			email_send: 'htkh17hcb@gmail.com',
+			password_email_sent: '0908325568',
+			host: 'imap.gmail.com',
+			port: 993,
+			email_receive: req.body.emailReceive,
+			subject: req.body.subject,
+			content_mail: req.body.content,
+		};
+		mail.sendMail(info,res);
+		
 	});
 }
 
 exports.getemailReceive=function(req,res) {
-	 connect.write("SELECT * FROM Mail")
-            .then(value=>
-            {
-            	res.json(value);
-              console.log("insert susccess!!");
-            })
-            .catch(err=>{
-            	res.status(400).send(err);
-              console.log("insert error!!"+err);
-            });
+	connect.write("SELECT * FROM Mail")
+	.then(value=>
+	{
+		res.json(value);
+		console.log("insert susccess!!");
+	})
+	.catch(err=>{
+		res.status(400).send(err);
+		console.log("insert error!!"+err);
+	});
 }
 exports.emailReceive = function(req,res) {
 	mail.receiveMail(req,res);

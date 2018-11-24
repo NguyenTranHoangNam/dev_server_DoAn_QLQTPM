@@ -56,10 +56,10 @@ exports.sendMail = function(info) {
   transporter.sendMail(mailOptions, function(error, info){
     if (error) {
       console.log(error);
-      return 400;
+      res.status(400).send({message: 'Có lỗi xảy ra. Hãy xem lại thông tin!'});
     } else {
       console.log('Email sent: ' + info);
-      return 500;
+      res.status(200).send({message: 'Đã gửi thành công!'});
     }
   });
 }
