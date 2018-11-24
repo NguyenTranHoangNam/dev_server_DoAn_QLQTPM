@@ -5,34 +5,24 @@ fs = require('fs');
 
 // arg: mailUser = email người gửi, emailReceive = danh sách email người nhận (array), subject = tiêu đề thư gửi, content = nội dung thư cần gửi
 exports.sendSupporters = function(arg) {
-	var form = new formidable.IncomingForm();
-	form.parse(req, function(err, fields,files) {		
-		connect.load(`SELECT Email, PasswordMail, HostSmtpMail, PostSmtpMail FROM AccountCompany WHERE Email = ${arg.mailUser}`)
-		.then(users =>{
-			if(users.length === 1) {
-				var info = {
-					email_send: 'coldboy6596@gmail.com',
-					password_email_sent: 'qetuoafj;ZB.',
-					host: 'imap.gmail.com',
-					port: 993,
-					email_receive: arg.emailReceive,
-					subject: arg.subject,
-					content_mail: arg.content,
-					//attachments: files.filetoupload.path
-				};
-				mail.sendMail(info,res);
-			}
-		})
-		.catch((error) => res.status(400).send(error));
-	});
+	var info = {
+		email_send: 'coldboy6596@gmail.com',
+		password_email_sent: 'qetuoafj;ZB.',
+		host: 'imap.gmail.com',
+		port: 993,
+		email_receive: req.body.emailReceive,
+		subject: req.body.subject,
+		content_mail: req.body.content,
+	};
+	mail.sendMail(info,res);
 }
 
 exports.sendMail = function(req,res) {
 	var info = {
-		email_send: '',
-		password_email_sent: '',
+		email_send: 'htkh17hcb@gmail.com',
+		password_email_sent: '0908325568',
 		host: 'smtp.gmail.com',
-		port: 587,
+		port: "465",
 		email_receive: req.body.emailReceive,
 		subject: req.body.subject,
 		content_mail: req.body.content,
@@ -57,10 +47,10 @@ exports.emailReceive = function(req,res) {
 }
 exports.getemailContent=function(req,res) {
 	connect.load("SELECT * FROM Mail WHERE Email = '"+req.body.email+"'")
-		.then(mail =>{
-			
-			res.json(mail);
-		})
-		.catch((error) => res.status(400).send(error));
+	.then(mail =>{
+
+		res.json(mail);
+	})
+	.catch((error) => res.status(400).send(error));
 
 }

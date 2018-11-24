@@ -22,23 +22,23 @@ input: info = {
   attachments: path of file
 }
 */
-exports.sendMail = function(info,res) {
+exports.sendMail = function(infomation,res) {
   var transporter = nodemailer.createTransport({
-    host: info.host,
-    port: info.port,
-    //service: 'gmail',
-
+    host: infomation.host,
+    port: infomation.port,
+    ssl : true,
+     
     auth: {
-      user: info.email_send,
-      pass: info.password_email_sent
+      user: infomation.email_send,
+      pass: infomation.password_email_sent
     }
   });
 
   var mailOptions = {
-    from: info.email_send,
-    to: info.email_receive,
-    subject: info.subject,
-    text: info.content_mail,
+    from: infomation.email_send,
+    to: infomation.email_receive,
+    subject: infomation.subject,
+    text: infomation.content_mail,
   };
 
   transporter.sendMail(mailOptions, function(error, info){
