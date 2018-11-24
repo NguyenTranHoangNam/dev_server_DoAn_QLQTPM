@@ -6,7 +6,7 @@ var router = express.Router();
 
 // API relate company
 router.route('/')
-.get(mail.emailReceive)
+.get(mail.getemailReceive)
 .post(mail.sendMail); // emailReceive, subject, content, mailUser
 
 
