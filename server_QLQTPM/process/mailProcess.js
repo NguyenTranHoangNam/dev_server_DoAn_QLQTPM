@@ -4,30 +4,26 @@ formidable = require('formidable'),
 fs = require('fs');
 
 // arg: mailUser = email người gửi, emailReceive = danh sách email người nhận (array), subject = tiêu đề thư gửi, content = nội dung thư cần gửi
-exports.sendSupporters = function(arg) {
-	var info = {
-		email_send: 'coldboy6596@gmail.com',
-		password_email_sent: 'qetuoafj;ZB.',
-		host: 'imap.gmail.com',
-		port: 993,
-		email_receive: req.body.emailReceive,
-		subject: req.body.subject,
-		content_mail: req.body.content,
-	};
-	mail.sendMail(info,res);
-}
-
 exports.sendMail = function(req,res) {
-	var info = {
-		email_send: 'htkh17hcb@gmail.com',
-		password_email_sent: '0908325568',
-		host: 'smtp.gmail.com',
-		port: "465",
-		email_receive: req.body.emailReceive,
-		subject: req.body.subject,
-		content_mail: req.body.content,
-	};
-	mail.sendMail(info,res);
+	connect.load("select Email, PasswordMail, HostSmtpMail, PostSmtpMail from AccountCompany where Username like 'supportcentermanagement'")
+	.then(row => {
+		if(row.length == 1){
+			var info = {
+				email_send: row[0].Email,
+				password_email_sent: row[0].PasswordMail,
+				host: row[0].HostSmtpMail,
+				port: row[0].PostSmtpMail,
+				email_receive: req.body.emailReceive,
+				subject: req.body.subject,
+				content_mail: req.body.content,
+			};
+			mail.sendMail(info,res);
+		}
+	})
+	.catch(err => {
+		console.log(err);
+      res.status(400).send({message: 'Có lỗi xảy ra khi lấy thông tin email gửi đi!'});		
+	});
 }
 
 exports.getemailReceive=function(req,res) {

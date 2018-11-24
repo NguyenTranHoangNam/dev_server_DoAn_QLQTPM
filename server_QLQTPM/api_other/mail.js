@@ -1,9 +1,5 @@
 var nodemailer = require('nodemailer');
-var Imap = require(`imap`),
-inspect = require(`util`).inspect;
-var fs = require(`fs`), fileStream;
-var os = require('os'),
-formidable = require('formidable');
+var Imap = require(`imap`);
 var db=require('./db');
 var MailParser = require("mailparser").MailParser;
 const simpleParser = require('mailparser').simpleParser;
@@ -27,7 +23,7 @@ exports.sendMail = function(infomation,res) {
     host: infomation.host,
     port: infomation.port,
     ssl : true,
-     
+
     auth: {
       user: infomation.email_send,
       pass: infomation.password_email_sent
@@ -38,13 +34,13 @@ exports.sendMail = function(infomation,res) {
     from: infomation.email_send,
     to: infomation.email_receive,
     subject: infomation.subject,
-    text: infomation.content_mail,
+    html: infomation.content_mail,
   };
 
   transporter.sendMail(mailOptions, function(error, info){
     if (error) {
       console.log(error);
-      res.status(400).send({message: 'Có lỗi xảy ra. Hãy xem lại thông tin!'});
+      res.status(400).send({message: 'Có lỗi xảy ra khi gửi mail!'});
     } else {
       console.log('Email sent: ' + info);
       res.status(200).send({message: 'Đã gửi thành công!'});
@@ -52,11 +48,25 @@ exports.sendMail = function(infomation,res) {
   });
 }
 
+var info_mail_admin = {};
+connect.load("select Email, PasswordMail, PostImap, HostImap from AccountCompany where Username like 'supportcentermanagement'")
+.then(row => {
+  if(row.length == 1){
+    info_mail_admin.mail = row[0].Email;
+    info_mail_admin.pass = row[0].PasswordMail;
+    info_mail_admin.post = row[0].PostImap;
+    info_mail_admin.host = row[0].HostImap;
+  }
+})
+.catch(err => {
+  console.log(err); 
+});
+
 var imap = new Imap({
-  user: 'htkh17hcb@gmail.com',
-  password: '0908325568',
-  host: 'imap.gmail.com',
-  port: 993,
+  user: info_mail_admin.mail || 'htkh17hcb@gmail.com',
+  password: info_mail_admin.pass || '0908325568',
+  host: info_mail_admin.host || 'imap.gmail.com',
+  port: info_mail_admin.post || 993,
   tls: true,
   keepalive: {
     interval: 3000,
