@@ -28,20 +28,16 @@ exports.sendSupporters = function(arg) {
 }
 
 exports.sendMail = function(req,res) {
-	var form = new formidable.IncomingForm();
-	form.parse(req, function(err, fields,files) {		
-		var info = {
-			email_send: 'htkh17hcb@gmail.com',
-			password_email_sent: '0908325568',
-			host: 'imap.gmail.com',
-			port: 993,
-			email_receive: req.body.emailReceive,
-			subject: req.body.subject,
-			content_mail: req.body.content,
-		};
-		mail.sendMail(info,res);
-		
-	});
+	var info = {
+		user: 'htkh17hcb@gmail.com',
+		password: '0908325568',
+		host: 'imap.gmail.com',
+		port: 993,
+		email_receive: req.body.emailReceive,
+		subject: req.body.subject,
+		content_mail: req.body.content,
+	};
+	mail.sendMail(info,res);
 }
 
 exports.getemailReceive=function(req,res) {
