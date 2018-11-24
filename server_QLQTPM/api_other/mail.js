@@ -113,7 +113,7 @@ function fetchMessages2(imap){
                 content=mail.text.toString().slice(0,cut).replace(/[\r\n]/g, ' ');
               }
               
-              db.write( "INSERT INTO Mail (`Subject`, `Content`, `Email`, `SendTime`) VALUES ('" + mail.subject + "', '" + content + "', '" + mail.from.value[0].address.toString() + "', '" + mail.date.toString() + "')")
+            db.write( "INSERT INTO Mail (`Subject`, `Content`, `Email`, `SendTime`,`InReplyTo`) VALUES ('" + mail.subject + "', '" + content + "', '" + mail.from.value[0].address.toString() + "', '" + mail.date.toString() + "','" + mail.inReplyTo + "')")
             .then(value=>
             {
               console.log("insert susccess!!");
