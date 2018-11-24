@@ -50,6 +50,18 @@ exports.sendMail = function(req,res) {
 	});
 }
 
+exports.getemailReceive=function(req,res) {
+	 connect.write("SELECT * FROM Mail")
+            .then(value=>
+            {
+            	res.json(value);
+              console.log("insert susccess!!");
+            })
+            .catch(err=>{
+            	res.status(400).send(err);
+              console.log("insert error!!"+err);
+            });
+}
 exports.emailReceive = function(req,res) {
 	mail.receiveMail(req,res);
 }

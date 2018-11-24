@@ -104,7 +104,9 @@ function fetchMessages2(imap){
        //"INSERT INTO Mail (`Subject`, `Content`, `Assigner`, `SendTime`) VALUES ('" + mail.subject + "', '" + mail.text.toString() + "', '" + mail.from.value[0].address.toString() + "', '" + mail.date.toString() + "');";
         msg.on('body', function(stream, info){
           simpleParser(stream, (err, mail) => {
-            db.write( "INSERT INTO Mail (`Subject`, `Content`, `Assigner`, `SendTime`) VALUES ('" + mail.subject + "', '" + mail.text.toString() + "', '" + mail.from.value[0].address.toString() + "', '" + mail.date.toString() + "')")
+            if(mail!=null)
+            {
+               db.write( "INSERT INTO Mail (`Subject`, `Content`, `Email`, `SendTime`) VALUES ('" + mail.subject + "', '" + mail.text.toString() + "', '" + mail.from.value[0].address.toString() + "', '" + mail.date.toString() + "')")
             .then(value=>
             {
               console.log("insert susccess!!");
@@ -116,6 +118,8 @@ function fetchMessages2(imap){
             console.log(prefix +" email from: "+ mail.from.value[0].address);
             console.log(prefix +" thoi gian: "+ mail.date);
             console.log(prefix +" noi dung: "+ mail.text);
+            }
+           
           });
         });
       })
@@ -152,3 +156,4 @@ exports.receiveMail = function(req,res) {
   imap.connect();
 
 }
+
