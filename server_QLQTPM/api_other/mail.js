@@ -49,7 +49,7 @@ exports.sendMail = function(info) {
       from: info.email_send,
       to: info.email_receive,
       subject: info.subject,
-      text: info.content_mail
+      text: info.content_mail,
     };
   }
 
@@ -106,7 +106,14 @@ function fetchMessages2(imap){
           simpleParser(stream, (err, mail) => {
             if(mail!=null)
             {
-               db.write( "INSERT INTO Mail (`Subject`, `Content`, `Email`, `SendTime`) VALUES ('" + mail.subject + "', '" + mail.text.toString() + "', '" + mail.from.value[0].address.toString() + "', '" + mail.date.toString() + "')")
+              var cut=mail.text.toString().indexOf("Vào");
+              var content=mail.text.toString().replace(/[\r\n]/g, ' ');
+              if(cut>0)
+              {
+                content=mail.text.toString().slice(0,cut).replace(/[\r\n]/g, ' ');
+              }
+              
+              db.write( "INSERT INTO Mail (`Subject`, `Content`, `Email`, `SendTime`) VALUES ('" + mail.subject + "', '" + content + "', '" + mail.from.value[0].address.toString() + "', '" + mail.date.toString() + "')")
             .then(value=>
             {
               console.log("insert susccess!!");
@@ -117,7 +124,13 @@ function fetchMessages2(imap){
             console.log(prefix +" tieu de: "+ mail.subject);
             console.log(prefix +" email from: "+ mail.from.value[0].address);
             console.log(prefix +" thoi gian: "+ mail.date);
-            console.log(prefix +" noi dung: "+ mail.text);
+           
+            console.log(prefix +" noi dung: "+content); 
+            console.log(prefix +"inReplyTo: "+ mail.inReplyTo);
+            console.log(prefix +"messageId: "+ mail.messageId);
+            console.log(mail.references);
+            console.log(mail.replyTo);
+            
             }
            
           });

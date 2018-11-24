@@ -1,6 +1,6 @@
 var connect = require('../api_other/db'),
 mail = require('../api_other/mail'),
-fromidable = require('formidable'),
+formidable = require('formidable'),
 fs = require('fs');
 
 // arg: mailUser = email người gửi, emailReceive = danh sách email người nhận (array), subject = tiêu đề thư gửi, content = nội dung thư cần gửi
