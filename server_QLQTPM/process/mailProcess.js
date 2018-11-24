@@ -11,8 +11,8 @@ exports.sendSupporters = function(arg) {
 		.then(users =>{
 			if(users.length === 1) {
 				var info = {
-					email_send: 'htkh17hcb@gmail.com',
-					password_email_sent: '0908325568',
+					email_send: 'coldboy6596@gmail.com',
+					password_email_sent: 'qetuoafj;ZB.',
 					host: 'imap.gmail.com',
 					port: 993,
 					email_receive: arg.emailReceive,
@@ -29,10 +29,10 @@ exports.sendSupporters = function(arg) {
 
 exports.sendMail = function(req,res) {
 	var info = {
-		user: 'htkh17hcb@gmail.com',
-		password: '0908325568',
-		host: 'imap.gmail.com',
-		port: 993,
+		email_send: '',
+		password_email_sent: '',
+		host: 'smtp.gmail.com',
+		port: 587,
 		email_receive: req.body.emailReceive,
 		subject: req.body.subject,
 		content_mail: req.body.content,
@@ -54,4 +54,13 @@ exports.getemailReceive=function(req,res) {
 }
 exports.emailReceive = function(req,res) {
 	mail.receiveMail(req,res);
+}
+exports.getemailContent=function(req,res) {
+	connect.load("SELECT * FROM Mail WHERE Email = '"+req.body.email+"'")
+		.then(mail =>{
+			
+			res.json(mail);
+		})
+		.catch((error) => res.status(400).send(error));
+
 }

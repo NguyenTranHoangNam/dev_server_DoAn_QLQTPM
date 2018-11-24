@@ -24,9 +24,9 @@ input: info = {
 */
 exports.sendMail = function(info,res) {
   var transporter = nodemailer.createTransport({
-    //host: info.host,
-    //port: info.port,
-    service: 'gmail',
+    host: info.host,
+    port: info.port,
+    //service: 'gmail',
 
     auth: {
       user: info.email_send,

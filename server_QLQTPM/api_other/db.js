@@ -1,17 +1,17 @@
 var mysql = require('mysql');
 
 var infoConnect = {
-	// host: 'www.db4free.net',
-	// port: '3306',
-	// user: 'teamnat',
-	// password: 'abcghi2356',
-	// database: 'chamsockhachhang'
-	host: 'localhost',
-	//connectionLimit: 10,
+	host: 'www.db4free.net',
 	port: '3306',
-	user: 'root',
-	password: '',
-	database: 'chamsockhachhang',
+	user: 'teamnat',
+	password: 'abcghi2356',
+	database: 'chamsockhachhang'
+	// host: 'localhost',
+	// //connectionLimit: 10,
+	// port: '3306',
+	// user: 'root',
+	// password: '',
+	// database: 'chamsockhachhang',
 };
 
 

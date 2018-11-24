@@ -9,6 +9,8 @@ router.route('/')
 .get(mail.getemailReceive)
 .post(mail.sendMail); // emailReceive, subject, content, mailUser
 
+router.route('/getContent')
+.post(mail.getemailContent); // emailReceive, subject, content, mailUser
 
 router.route('/:id')
 .get(company.getCompany)
