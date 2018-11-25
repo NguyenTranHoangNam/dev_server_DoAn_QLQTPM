@@ -49,7 +49,7 @@ exports.sendMail = function(infomation,res) {
 }
 
 var info_mail_admin = {};
-connect.load("select Email, PasswordMail, PostImap, HostImap from AccountCompany where Username like 'supportcentermanagement'")
+db.load("select Email, PasswordMail, PostImap, HostImap from AccountCompany where Username like 'supportcentermanagement'")
 .then(row => {
   if(row.length == 1){
     info_mail_admin.mail = row[0].Email;
