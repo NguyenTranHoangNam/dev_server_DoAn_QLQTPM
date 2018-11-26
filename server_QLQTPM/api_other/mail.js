@@ -20,10 +20,10 @@ input: info = {
 */
 exports.sendMail = function(infomation,res) {
   var transporter = nodemailer.createTransport({
-    host: infomation.host,
-    port: infomation.port,
-    ssl : true,
-
+    service: 'Gmail',
+    tls: {
+        rejectUnauthorized: false
+      },
     auth: {
       user: infomation.email_send,
       pass: infomation.password_email_sent
