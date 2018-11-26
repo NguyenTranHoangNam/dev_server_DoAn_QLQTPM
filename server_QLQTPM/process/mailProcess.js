@@ -25,9 +25,11 @@ exports.sendMail = function(req,res) {
       res.status(400).send({message: 'Có lỗi xảy ra khi lấy thông tin email gửi đi!'});		
 	});
 }
-
+//SELECT DISTINCT TOP 1 ID, Email, ProductName, ProductModel
+// FROM Products
+// ORDER BY ID DESC
 exports.getemailReceive=function(req,res) {
-	connect.write("SELECT * FROM Mail")
+	connect.write("SELECT * FROM Mail WHERE ID IN(SELECT Max(ID) FROM Mail GROUP BY Email)")
 	.then(value=>
 	{
 		res.json(value);
