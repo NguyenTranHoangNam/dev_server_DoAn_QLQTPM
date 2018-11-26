@@ -18,7 +18,7 @@ input: info = {
   attachments: path of file
 }
 */
-exports.sendMail = function(infomation,res) {
+exports.sendMail = function(infomation,res,mode = 0) {
 	var transporter = nodemailer.createTransport({
 		host: infomation.host,
 		port: infomation.port,
@@ -35,7 +35,7 @@ exports.sendMail = function(infomation,res) {
 		to: infomation.email_receive,
 		subject: infomation.subject,
 		html: infomation.content_mail,
-		inReplyTo: infomation.message_id
+		inReplyTo: infomation.reply_message_id
 	};
 
 	transporter.sendMail(mailOptions, function(error, info){
@@ -44,7 +44,10 @@ exports.sendMail = function(infomation,res) {
 			res.status(400).send({message: 'Có lỗi xảy ra khi gửi mail!'});
 		} else {
 			console.log('Email sent: ' + info);
-			res.status(200).send({message: 'Đã gửi thành công!'});
+			if(mode == 0)
+				res.status(200).send({message: 'Đã gửi thành công!'});
+			else if(mode == 1)
+				return info.messageId;
 		}
 	});
 }
@@ -110,14 +113,28 @@ exports.receiveMail = function(req,res) {
             				content=mail.text.toString().slice(0,cut).replace(/[\r\n]/g, ' ');
             			}
 
-            			db.write( "INSERT INTO Mail (`Subject`, `Content`, `Email`, `SendTime`,`InReplyTo`) VALUES ('" + mail.subject + "', '" + content + "', '" + mail.from.value[0].address.toString() + "', '" + formatDate(mail.date) + "','" + mail.inReplyTo + "')")
-            			.then(value=>
-            			{
+            			db.load(`SELECT id FROM Ticket WHERE mail_id like '${(Array.isArray(mail.references) ? mail.references[0] : mail.references)}'`)
+            			.then(row => {
+            				if(row.length == 1){
+            					db.write(`INSERT INTO TicketResponse (ticket_id, user_response, mail_id, content, datetime) VALUES ('${row[0].id}', '${mail.from.value[0].address.toString()}', '${mail.messageId}', '${content}', '${formatDate(mail.date)}')`);
+            					db.write(`UPDATE Ticket SET status = '2' WHERE id = '${row[0].id}'`);
+            					return true;
+            				}
+            				else return false;
+            			})
+            			.then(value =>{
+            				if(!value)
+            					return db.write( "INSERT INTO Mail (`Subject`, `Content`, `Email`, `SendTime`,`InReplyTo`) VALUES ('" + mail.subject + "', '" + content + "', '" + mail.from.value[0].address.toString() + "', '" + formatDate(mail.date) + "','" + (Array.isArray(mail.references) ? mail.references[0] : mail.references) + "')");
+            				else
+            					return false;
+						})
+            			.then(value => {
             				console.log("insert susccess!!");
             			})
             			.catch(err=>{
             				console.log("insert error!!"+err);
             			});
+
             			console.log(prefix +" tieu de: "+ mail.subject);
             			console.log(prefix +" email from: "+ mail.from.value[0].address);
             			console.log(prefix +" thoi gian: "+ mail.date);
