@@ -5,14 +5,14 @@ fs = require('fs');
 
 // arg: mailUser = email người gửi, emailReceive = danh sách email người nhận (array), subject = tiêu đề thư gửi, content = nội dung thư cần gửi
 exports.sendMail = function(req,res) {
-	connect.load("select Email, PasswordMail, HostSmtpMail, PostSmtpMail from AccountCompany where Username like 'supportcentermanagement'")
+	connect.load("select Email, PasswordMail, HostSmtpMail, PortSmtpMail from AccountCompany where Username like 'supportcentermanagement'")
 	.then(row => {
 		if(row.length == 1){
 			var info = {
 				email_send: row[0].Email,
 				password_email_sent: row[0].PasswordMail,
 				host: row[0].HostSmtpMail,
-				port: row[0].PostSmtpMail,
+				port: row[0].PortSmtpMail,
 				email_receive: req.body.emailReceive,
 				subject: req.body.subject,
 				content_mail: req.body.content,

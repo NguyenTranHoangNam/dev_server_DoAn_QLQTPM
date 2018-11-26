@@ -59,13 +59,13 @@ function formatDate(date) {
 }
 
 exports.receiveMail = function(req,res) {
-  db.load("select Email, PasswordMail, PostImap, HostImap from AccountCompany where Username like 'supportcentermanagement'")
+  db.load("select Email, PasswordMail, PortImap, HostImap from AccountCompany where Username like 'supportcentermanagement'")
   .then(row => {
-    var imap = new Imap({
+  	var imap = new Imap({
       user: row[0].Email || 'htkh17hcb@gmail.com',
       password: row[0].PasswordMail || '0908325568',
-      host: row[0].PostImap || 'imap.gmail.com',
-      port: row[0].HostImap || 993,
+      host: row[0].HostImap || 'imap.gmail.com',
+      port: row[0].PortImap || 993,
       tls: true,
       keepalive: {
         interval: 3000,
