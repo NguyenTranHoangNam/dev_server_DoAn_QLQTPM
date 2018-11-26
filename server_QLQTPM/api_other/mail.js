@@ -35,6 +35,7 @@ exports.sendMail = function(infomation,res) {
     to: infomation.email_receive,
     subject: infomation.subject,
     html: infomation.content_mail,
+    inReplyTo: infomation.message_id
   };
 
   transporter.sendMail(mailOptions, function(error, info){

@@ -16,7 +16,7 @@ exports.sendMail = function(req,res) {
 				email_receive: req.body.emailReceive,
 				subject: req.body.subject,
 				content_mail: req.body.content,
-				message_id: req.body.mailId,
+				message_id: req.body.mailId
 			};
 			mail.sendMail(info,res);
 		}
