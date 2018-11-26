@@ -16,6 +16,7 @@ exports.sendMail = function(req,res) {
 				email_receive: req.body.emailReceive,
 				subject: req.body.subject,
 				content_mail: req.body.content,
+				message_id: req.body.mailId,
 			};
 			mail.sendMail(info,res);
 		}
@@ -27,7 +28,7 @@ exports.sendMail = function(req,res) {
 }
 
 exports.getemailReceive=function(req,res) {
-	connect.write("SELECT * FROM Mail")
+	connect.write("SELECT * FROM Mail ORDER BY SendTime DESC;")
 	.then(value=>
 	{
 		res.json(value);
