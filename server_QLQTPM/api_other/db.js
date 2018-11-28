@@ -1,11 +1,11 @@
 var mysql = require('mysql');
 
 var infoConnect = {
-	host: 'www.db4free.net',
+	host: 'us-cdbr-iron-east-01.cleardb.net',
 	port: '3306',
-	user: 'teamnat',
-	password: 'abcghi2356',
-	database: 'chamsockhachhang'
+	user: 'bcbff17ba4cbfa',
+	password: '191e57f2',
+	database: 'heroku_cb63d0a58570ed4'
 	// host: 'localhost',
 	// //connectionLimit: 10,
 	// port: '3306',
