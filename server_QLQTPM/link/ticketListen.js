@@ -16,9 +16,9 @@ router.route('/getResponse/:idTicket')
 .get(ticket.getListResponse);
 
 router.route('/response')
-.post(ticket.response); // idTicket, emailRepuest, contentResponse, ticketSubject, userResponse
+.post(ticket.response); // ticketID, emailRepuest, contentResponse, ticketSubject, userResponse
 
 router.route('/changeStatu')
-.post(ticket.changeStatu); // statusID, ticketID
+.post(ticket.changeStatu); // statusName, ticketID
 
 module.exports = router;

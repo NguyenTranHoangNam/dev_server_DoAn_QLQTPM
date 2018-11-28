@@ -1,5 +1,5 @@
 var db = require('../api_other/db'),
-	mail = require('./mail');
+mail = require('./mail');
 
 
 exports.create = function(req, res) {
@@ -26,7 +26,7 @@ exports.create = function(req, res) {
 	})
 	.catch(err => {
 		console.log(err);
-      	res.status(400).send({message: 'Có lỗi xảy ra khi lấy thông tin email gửi đi!'});
+		res.status(400).send({message: 'Có lỗi xảy ra khi lấy thông tin email gửi đi!'});
 	});
 }
 // idTicket
@@ -64,8 +64,8 @@ exports.getListResponse = function(req,res) {
 }
 // ticketSubject (ticket), emailRequest, contentResponse (response of supporter), ticketID, userResponse
 exports.response = function(req,res) {
-db.load(`SELECT Email, PasswordMail, HostSmtpMail, PortSmtpMail, Ticket.mail_id mailId FROM AccountCompany, Ticket 
-	WHERE Ticket.id = ${req.body.ticketID} AND AccountCompany.Username like 'supportcentermanagement'`)
+	db.load(`SELECT Email, PasswordMail, HostSmtpMail, PortSmtpMail, Ticket.mail_id mailId FROM AccountCompany, Ticket 
+		WHERE Ticket.id = ${req.body.ticketID} AND AccountCompany.Username like 'supportcentermanagement'`)
 	.then(row => {
 		if(row.length == 1){
 			var info = {
@@ -78,13 +78,13 @@ db.load(`SELECT Email, PasswordMail, HostSmtpMail, PortSmtpMail, Ticket.mail_id 
 				content_mail: req.body.contentResponse,
 				reply_message_id: row[0].mailId
 			};
+			db.write(`UPDATE Ticket SET status = '3' WHERE id = '${req.body.ticketID}'`);
 			return mail.sendMail(info,res,1);
 		}
 	})
 	.then(mailID => {
 		db.write(`INSERT INTO TicketResponse (ticket_id, user_response, mail_id, content) VALUES 
 			('${req.body.ticketID}', '${req.body.userResponse}', '${mailID}', '${req.body.contentResponse}'`);
-		db.write(`UPDATE Ticket SET status = '3' WHERE id = '${row[0].id}'`);
 		return true;
 	})
 	.then(ticket => {
@@ -97,7 +97,8 @@ db.load(`SELECT Email, PasswordMail, HostSmtpMail, PortSmtpMail, Ticket.mail_id 
 }
 
 exports.changeStatu = function(req,res) {
-	db.write(`UPDATE Ticket SET status = '${req.body.statusID}' WHERE id = '${req.body.ticketID}'`)
+	db.write(`UPDATE Ticket SET status = (SELECT StatusID FROM Status 
+		WHERE StatusName = '${req.body.statusName}') WHERE id = '${req.body.ticketID}'`)
 	.then(() => {
 		res.status(200).send({message: 'Đổi trạng thái thành công!'});
 	})
