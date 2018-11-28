@@ -20,6 +20,7 @@ app.use(session({secret: 'QLPM'}));
 app.use('/user', require('./link/userListen'));
 app.use('/company', require('./link/companyListen'));
 app.use('/mail', require('./link/mailListen'));
+app.use('/ticket', require('./link/ticketListen'));
 
 require('./link/chatListen');
 mail.emailReceive();
