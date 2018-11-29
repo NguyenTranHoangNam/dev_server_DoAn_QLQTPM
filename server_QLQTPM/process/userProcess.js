@@ -29,34 +29,35 @@ var session = require('express-session');
 
 
 exports.login = function(req, res){
-	if(req.session.Email){
+	/*if(req.session.Email){
 		res.status(400).send({message: 'Đã đăng nhập'});
-	}else{
+	}else{*/
 		var un = req.body.u;
 		var pw = req.body.p;
+		console.log(`select Email, Password, Username, PhoneNumber from AccountCompany 
+			where md5(Email) like md5('${un}') and Password like md5('${pw}')`);
 		connect.load(`select Email, Password, Username, PhoneNumber from AccountCompany 
 			where md5(Email) like md5('${un}') and Password like md5('${pw}')`)
 		.then(users => { 
 			//console.log(JSON.stringify(users));
 			console.log(JSON.stringify(users));
 			if(users.length === 0){
-				 res.json({success:0});
+				 res.json({success:1});
 				 //res.status(400).send({ message: 'Đăng nhập thất bại\nNhập sai email hoặc mật khẩu' });
 			}else if(users[0].Email == un && users[0].Password == md5(pw)){
-				req.session.Email = users[0].Email; 
+				//req.session.Email = users[0].Email; 
 				users[0].Password = undefined;
-				res.status(200).send(JSON.stringify(users[0]));
+				res.status(200).send(users[0]);
 			}else {
-				res.json({success:0});
+				res.json({success:2});
 				//res.status(400).send({ message: 'Đăng nhập thất bại' });
 			}
 		})
 		.catch((error) => {
 			console.log(error);
-			res.status(400).send({success:0});
+			res.status(400).send({success:3});
 		});
 	}
-}
 
 exports.update = function(req, res) {
 	if(!req.body.u) res.status(400).send('Không nhận được khóa đầu vào.');
@@ -98,15 +99,15 @@ exports.register = function(req, res) {
 	})
 	.catch(err => console.log(err));
 
-	if(req.session.Email){
+	/*if(req.session.Email){
 		res.status(100).send({message: 'Đã đăng nhập'});
-	}
+	}*/
 
 	let email = req.body.email;
 	let pw = req.body.pw;
 	let f_name = req.body.uname;
 	let phone = req.body.phone;
-	connect.load('insert into AccountCompany(Username, Email, Password, PhoneNumber) values(\''+f_name+'\', \''+email+'\',\'MD5('+pw+')\',\''+phone+'\');')
+	connect.load('insert into AccountCompany(Username, Email, Password, PhoneNumber) values(\''+f_name+'\', \''+email+'\',md5(\''+pw+'\'),\''+phone+'\');')
 	.then(() => {
 		res.status(200).send({message: 'Tạo tài khoản thành công.'});
 	})
