@@ -1,5 +1,5 @@
 var db = require('../api_other/db'),
-mail = require('./mail');
+mail = require('../api_other/mail');
 
 
 exports.create = function(req, res) {
