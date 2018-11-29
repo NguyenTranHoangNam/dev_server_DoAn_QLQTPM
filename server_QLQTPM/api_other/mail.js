@@ -128,7 +128,7 @@ exports.receiveMail = function(req,res) {
             			})
             			.then(value =>{
             				if(!value)
-            					return db.write( "INSERT INTO Mail (`Subject`, `Content`, `Email`, `SendTime`,`InReplyTo`) VALUES ('" + mail.subject + "', '" + content + "', '" + mail.from.value[0].address.toString() + "', '" + formatDate(mail.date) + "','" + (Array.isArray(mail.references) ? mail.references[0] : mail.references) + "')");
+            					return db.write( "INSERT INTO Mail (`Subject`, `Content`, `Email`, `SendTime`,`InReplyTo`,`TypeID`) VALUES ('" + mail.subject + "', '" + content + "', '" + mail.from.value[0].address.toString() + "', '" + formatDate(mail.date) + "','" + (Array.isArray(mail.references) ? mail.references[0] : mail.references) + "',"+0+")");
             				else
             					return false;
 						})
@@ -170,7 +170,12 @@ exports.receiveMail = function(req,res) {
     		if (err) throw err;
     		imap.on('mail', function(numNewMsgs){
     			console.log(numNewMsgs + " messages has arrived");
-    			fetchMessages2(imap);
+                try{
+                    fetchMessages2(imap);
+                }catch(err){
+                    console.log('error: ' + err);
+                }
+    			
     		});
 
     	});
