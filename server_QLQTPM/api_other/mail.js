@@ -20,8 +20,12 @@ input: info = {
 */
 exports.sendMail = function(infomation,res,mode = 0) {
 	var transporter = nodemailer.createTransport({
-		host: infomation.host,
-		port: infomation.port,
+		// host: infomation.host,
+		// port: infomation.port,
+    service:'Gmail',
+    tls:{
+        rejectUnauthorized:false
+    },
 		ssl : true,
 
 		auth: {

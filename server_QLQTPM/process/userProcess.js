@@ -26,6 +26,8 @@ var session = require('express-session');
 // 		.catch((error) => res.status(400).send(error));
 // 	}
 // }
+
+
 exports.login = function(req, res){
 	if(req.session.Email){
 		res.status(100).send({message: 'Đã đăng nhập'});
@@ -34,8 +36,8 @@ exports.login = function(req, res){
 		var pw = req.body.p;
 			console.log('select count(*) as sl,ComID, Email, Password, Username, PhoneNumber from AccountCompany where '+
 			'Email like \''+un+'\' and Password like \''+md5(pw)+'\'');
-		connect.load('select count(*) as sl,ComID, Email, Password, Username, PhoneNumber from AccountCompany where '+
-			'Email like \''+un+'\' and Password like \''+md5(pw)+'\'  group by ComID')
+		connect.load('select count(*) as sl, Email, Password, Username, PhoneNumber from AccountCompany where '+
+			'Email like \''+un+'\' and Password like \''+md5(pw)+'\'  group by Email')
 		.then(users => { 
 			//console.log(JSON.stringify(users));
 			console.log(JSON.stringify(users));
@@ -85,13 +87,12 @@ exports.update = function(req, res) {
 		connect.write(`UPDATE AccountCompany SET PostSmtpMail='${req.body.pom}' WHERE Email='${req.body.u}';`)
 		.catch(err => console.log(err));
 	}
-
 	res.status(200).send({message: 'Sửa thành công'});
 }
 exports.register = function(req, res) {
 	connect.load(`SELECT * FROM AccountCompany WHERE Email='${req.body.email}';`)
 	.then(rows => {
-		if(rows.length != 1)
+		if(rows.length == 1)
 			res.status(400).send({message: 'Email đã có người đăng ký email này rồi!'});
 	})
 	.catch(err => console.log(err));
@@ -104,9 +105,7 @@ exports.register = function(req, res) {
 	let pw = req.body.pw;
 	let f_name = req.body.uname;
 	let phone = req.body.phone;
-	let com = req.body.comid;
-
-	connect.load('insert into AccountCompany(Username, Email, Password, PhoneNumber, ComID) values(\''+f_name+' '+email+'\',\'MD5('+pw+')\',\''+phone+'\',\''+com+'\');')
+	connect.load('insert into AccountCompany(Username, Email, Password, PhoneNumber) values(\''+f_name+'\', \''+email+'\',\'MD5('+pw+')\',\''+phone+'\');')
 	.then(() => {
 		res.status(200).send({message: 'Tạo tài khoản thành công.'});
 	})

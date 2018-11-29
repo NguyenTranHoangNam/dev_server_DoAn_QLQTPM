@@ -367,12 +367,12 @@
     import router from '../router';
     import {eventBus} from '../main.js';
 	export default{
-          data(){
+        data(){
             return {
                 isCheckLogin: true,
                 isCheckRegister: false,
                 title:"Form Login",
-				formdata:{u:'hotdau911995@yahoo.com',p:123456},
+				formdata:{u:'htkh17hcb@gmail.com',p:'0908325568'},
                 msg:'',
             }
         },
@@ -386,21 +386,22 @@
                     this.isCheckRegister = !this.isCheckRegister;
                 },
                 login(){// chuoi json can nhan {success: 1, email: "hotdau1@yahoo.com", fullname: "anh yêu"}
-                console.log(this.formdata);
-                if(this.formdata.p==null || this.formdata.p==null){
-                    alert('Email and Password not null!!!');
-                    return;
-                }
-                this.axios.post("http://172.28.77.1:1742/user/login/",this.formdata)
+                    console.log(this.formdata);
+                    if(this.formdata.p==null || this.formdata.p ==null){
+                        alert('Email and Password not null!!!');
+                        return;
+                    }
+                    this.axios.post("http://172.28.77.1:1742/user/login/",this.formdata)
                     .then((response) => {
                         console.log(response.data);
+
                         localStorage.setItem('key',response.data.Email);
                          //localStorage.setItem('key',response.data.Email);
                         if(response.data.sl==1){// dang nhap thanh cong
                             eventBus.$emit('flag','true');
                              router.push({ name: 'listTickets' });
-                             //router.push({ path: '/listTickets' })
-                             //router.go(-1);
+                             //router.push({ path: '/list-tickets' })                             //router.go(-1);
+
                         }
                         else{
                             if(response.data.success == 0){// user hoac matkhau sai
@@ -410,7 +411,7 @@
                      }).catch(err => {
                         console.log(err)
                     })
-            },
+                },
          }
     };
 </script>

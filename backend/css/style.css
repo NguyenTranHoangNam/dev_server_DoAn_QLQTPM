@@ -39,6 +39,10 @@ body a:hover{
 	left:0;
 	z-index:9999;
 }
+a.active{
+    border-bottom: 3px solid navy !important;
+    padding-bottom: 8px !important;
+}
 span.glyphicon.glyphicon-shopping-cart.my-cart-icon.my-cart-icon-affix {
 	position: relative !important;
 }
@@ -163,7 +167,7 @@ ul.dropdown-menu.drp-mnu li a i {
 }
 .w3ls_logo_products_left{
 	float:left;
-	margin-right: 7em;
+	margin-right: 0em;
 }
 /*
 .w3ls_logo_products_left h1 a {
@@ -214,6 +218,8 @@ ul.dropdown-menu.drp-mnu li a i {
 	color:#212121;
 	font-family: 'Ubuntu', sans-serif;
 	text-decoration:none;
+    font-size: 17px;
+    font-weight: bold;
 }
 .w3ls_logo_products_left1 ul.special_items li a:hover,.w3ls_logo_products_left1 ul.phone_email li a:hover{
 	color:#FA1818;
@@ -1054,7 +1060,7 @@ button.submit.check_out{
     background: #fff;
     border: 1px solid #fff;
     font-size: 14px;
-    color: #FA1818;
+    color: #055ea4;
     width: 25.7%;
     text-transform: uppercase;
 }

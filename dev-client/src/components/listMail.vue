@@ -152,7 +152,7 @@
 }
 .message-info .customer-message .name-customer{ 
 	width: 90%;
-	margin: 5px 0 0 0;
+	margin: 5px -23px 0 0;
     padding: 0;
     float: right;
 }
@@ -165,7 +165,28 @@
     padding: 0;
     float: right;
 }
-
+span.msg {
+    font-style: italic;
+    display: inherit;
+    color: #000000c9;
+    font-family: none;
+}
+div#wrapper {
+    overflow: auto;
+}
+ul#side-menu {
+    overflow: auto !important;
+    max-height: 300px;
+    min-height: 695px;
+}
+@media (min-width: 768px){
+    .listmail {
+        z-index: 1;
+        position: absolute;
+        width: 278px !important;
+        margin-top: 51px;
+    }
+}
 </style>
 <template>
 	<div>
@@ -194,7 +215,7 @@
                         </div>
                     </form>
                 </div></li>
-                <li>Trương Văn Hậu</li>
+                <li>{{Email}}</li>
                 <li class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                         <i class="fa fa-user fa-fw"></i>  <i class="fa fa-caret-down"></i>
@@ -214,45 +235,10 @@
             </ul>
             <!-- end top bar -->
 
-            <!-- left side bar fixed --> 
-           <!--   <div class="container">
-                <div class="side-bar">
-                    <ul class="side-left">
-                        <li>
-                            <a href="#"><i class="fa fa-th" aria-hidden="true"></i></a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <i class="fa fa-home" aria-hidden="true"></i>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <i class="fa fa-book" aria-hidden="true"></i>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <i class="glyphicon glyphicon-signal" ></i>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" class="user-login">
-                                <i class="fa fa-user" aria-hidden="true"></i>
-                            </a>
-                        </li>
-                        <li >
-                            <a href="#">
-                                <i class="fa fa-cog" aria-hidden="true"></i>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </div> -->
-             <!-- hết side-bar -->
+        
 
-             <!-- filter view tickets -->
-            <div class="navbar-default navbar-static-side nav-ins" role="navigation">
+             <!-- LIST MAIL LEFT -->
+            <div class="navbar-default navbar-static-side nav-ins listmail" role="navigation">
                 <div class="sidebar-collapse">
                     <ul class="nav" id="side-menu">
                         <li>
@@ -261,47 +247,19 @@
                                 <span class="back"><i class="fa fa-chevron-left" aria-hidden="true"></i></span>
                             </h4>
                         </li>
-                        <li>
-                            <a href="#"> 
+                        <li v-for="item in privatemsg">
+                            <a @click="message(item.Email)"> 
                                 <p class="icon-user">
                                     <i class="fa fa-user"></i>
                                 </p>
-                                <b>Trường Văn Hậu </b>
-                                <span>hau@yahoo.com</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#"> 
-                                <p class="icon-user">
-                                    <i class="fa fa-user"></i>
-                                </p>
-                                <b>Nguyễn Trần Hoàng Nam </b>
-                                <span>nam@yahoo.com</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#"> 
-                                <p class="icon-user ">
-                                    <i class="fa fa-user"></i>
-                                </p>
-                                
-                                <b>Nguyễn Hải Đăng </b>
-                                <span>dang@yahoo.com</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#"> 
-                                <p class="icon-user ">
-                                    <i class="fa fa-user"></i>
-                                </p>
-                                <b> Nguyễn Võ Minh Vương </b>
-                                <span>vuong@yahoo.com</span>
+                                <b>{{item.Email.slice(0,40)+'...'}} </b>
+                                <span class="msg">{{item.Content.slice(0,39)+'...'}}</span>
                             </a>
                         </li>
                     </ul>
                 </div>
             </div>
-             <!--end filter view tickets -->
+             <!--END LIST MAIL LEFT -->
         </nav>
         <!-- end menu left -->
 
@@ -311,16 +269,16 @@
                     <div class="col-lg-12">
                         <span class="fa fa-envelope-o help-contact"></span>
                         <div class="help-wrapper">
-                            <p>Hổ trợ về bảo mật</p>
+                            <p>Hổ trợ Khách hàng</p>
                             <h4 class="info-employees">
-                                <span>Ngày giờ</span> 
+                                <span>{{datenow}}</span> 
                                     > 
                                 <span>Nhân viên 
-                                    <a href="#">(change)
+                                    <a href="#">({{Email}})
                                     </a>
                                 </span> 
                                     >
-                                <span>Via support@admin.com</span> 
+                               
                             </h4>
                         </div>
                     </div>
@@ -336,17 +294,17 @@
                     </div>
                     <div class="col-lg-11">
                          <div class="reply-form">
-                            <form action="" method="">
+                            <form action="" method="post" v-on:submit.prevent="senmail">
                                 <div class="form-group" style="margin-left: 15px;">
                                     <label for="exampleFormControlTextarea1">Trả lời</label>
-                                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" v-model="sendmessage.content" ></textarea>
                                     <div class="text-form">
                                         <div class="row">
                                             <div class="col-lg-1">
                                                 <div class="T">
                                                     <a href="#" >T</a>
                                                 </div>
-                                                <div class="upload">
+                                                        <div class="upload">
                                                     <i class="fa fa-upload" aria-hidden="true"></i>
                                                 </div>
                                             </div>
@@ -354,7 +312,7 @@
                                                 <input type="text" class="form-control" name="">
                                             </div>
                                             <div class="col-lg-1">
-                                                <span class="btn btn-info btn-block">send</span>
+                                                <span class="btn btn-info btn-block" @click="sendMsg">send</span>
                                             </div>
                                         </div>
                                     </div>
@@ -367,35 +325,15 @@
             <!-- hết reply -->
             <div class="message-info">
                 <div class="all-message">
-                    All message <span class="quantity badge badge-info">4</span>
+                    All message <span class="quantity badge badge-info">{{messageContent.length}}</span>
                 </div>
-                <div class="customer-message">
+                <div class="customer-message" v-for="item in messageContent">
                     <div class="row">
-                        <span class="help-contact">P <i class="fa fa-user"></i></span>
+                        <span class="help-contact"><img v-bind:src="item.AttachFile" style="width:47px;height:47px;border-radius:32px"> <i class="fa fa-user"></i></span>
                         <b class="name-customer">
-                            Phương Trương <span>Tuesday 23:08 (<a href="">assign</a>)</span>
+                           {{item.Email}} <span>( {{item.SendTime}}) </span>
                         </b>
-                        <p class="reply-customer">?</p>
-                    </div>
-                </div>
-                <!-- hết 1 customer-message -->
-                <div class="customer-message">
-                    <div class="row">
-                        <span class="help-contact">P <i class="fa fa-user"></i></span>
-                        <b class="name-customer">
-                            Phương Trương <span>Tuesday 23:08 (<a href="">assign</a>)</span>
-                        </b>
-                        <p class="reply-customer">?</p>
-                    </div>
-                </div>
-                <!-- hết 1 customer-message -->
-                <div class="customer-message">
-                    <div class="row">
-                        <span class="help-contact">P <i class="fa fa-user"></i></span>
-                        <b class="name-customer">
-                            Phương Trương <span>Tuesday 23:08 (<a href="">assign</a>)</span>
-                        </b>
-                        <p class="reply-customer">?</p>
+                        <p class="reply-customer">{{item.Content}}</p>
                     </div>
                 </div>
                 <!-- hết 1 customer-message -->
@@ -405,3 +343,155 @@
     </div>
 
 </template>
+
+<script >
+    export default{
+        data(){
+             var name = localStorage.getItem('key');
+            return {
+                  privatemsg:[],
+                  Email: name,
+                  sendmessage:{},
+                  messageContent:[],
+                  countMessage:'',
+                  datenow:this.formatAMPM(new Date()),
+                  avatarImg:''
+            }
+        },
+        
+        ready:function(){
+            this.created();
+            //this.datenow = 
+        },  
+        created(){
+            this.axios.get('http://172.28.77.1:1742/mail')   
+            .then(response =>{
+                this.privatemsg = response.data; 
+            })
+            .catch(function(error){
+                console.log(error);
+            })
+        },
+        
+        // lay danh sach message cua tung mail
+        methods:{
+            message: function(Email){
+               // alert(Email);
+                this.axios.post('http://172.28.77.1:1742/mail/getContent', {
+                      email: Email,
+                    })
+                    .then( (response) => {              
+                      
+                      if(response.data[0].Email==Email){
+                            this.avatarImg = 'https://www.upsieutoc.com/images/2018/11/23/user.png';
+                            //response.data.AttachFile='https://www.upsieutoc.com/images/2018/11/23/user.png';
+                            for (var i = 0; i < response.data.length; i++) {
+                                response.data[i].AttachFile = 'https://www.upsieutoc.com/images/2018/11/23/user.png';
+                            }
+                            this.messageContent = response.data; 
+                            console.log(response.data); // show if success
+                      }
+                    
+                    })
+                    .catch(function (error) {
+                      console.log(error); // run if we have error
+                    });
+            },
+             formatAMPM:function(date) {
+                var hours = date.getHours();
+                var minutes = date.getMinutes();
+                var ampm = hours >= 12 ? 'PM' : 'AM';
+                hours = hours % 12;
+                hours = hours ? hours : 12; // the hour '0' should be '12'
+                minutes = minutes < 10 ? '0'+minutes : minutes;
+                var strTime = hours + ':' + minutes + ' ' + ampm;
+                return strTime;
+            },       
+
+           //  inputHandler(e){
+           //   if(e.keyCode ===13 && !e.shiftKey){
+           //     e.preventDefault();
+           //     this.sendMsg();
+           //   }
+           // },
+           sendMsg(){
+                if(this.Email=='htkh17hcb@gmail.com'){
+                        var msg = {'AttachFile':'https://www.upsieutoc.com/images/2018/11/23/tv.png','Email':'hotdau@gmail.com','SendTime':'2018-11-25T07:46:12','Content':'hau vua gui tin'};
+                        this.messageContent.push(msg);
+                        alert(this.sendmessage.content);
+                  }
+            
+
+                // if(this.msgFrom){
+                //     alert('ok');
+                // }
+                
+             // if(this.msgFrom){
+             //   axios.post('http://localhost/larabook/index.php/sendMessage', {
+             //          conID: this.conID,
+             //          msg: this.msgFrom
+             //        })
+             //        .then( (response) => {              
+             //          console.log(response.data); // show if success
+             //          if(response.status===200){
+             //            app.singleMsgs = response.data;
+             //          }
+
+             //        })
+             //        .catch(function (error) {
+             //          console.log(error); // run if we have error
+             //        });
+
+             // }
+           },
+        }
+    }
+
+//v-model="msgFrom" @keydow="inputHandler"
+// inputHandler(e){
+//      if(e.keyCode ===13 && !e.shiftKey){
+//        e.preventDefault();
+//        this.sendMsg();
+//      }
+//    },
+//    sendMsg(){
+//      if(this.msgFrom){
+//        axios.post('http://localhost/larabook/index.php/sendMessage', {
+//               conID: this.conID,
+//               msg: this.msgFrom
+//             })
+//             .then( (response) => {              
+//               console.log(response.data); // show if success
+//               if(response.status===200){
+//                 app.singleMsgs = response.data;
+//               }
+
+//             })
+//             .catch(function (error) {
+//               console.log(error); // run if we have error
+//             });
+
+//      }
+//    },
+
+//    friendID: function(id){
+//      app.friend_id = id;
+//    },
+//    sendNewMsg(){
+//      axios.post('http://localhost/larabook/index.php/sendNewMessage', {
+//             friend_id: this.friend_id,
+//             msg: this.newMsgFrom,
+//           })
+//           .then(function (response) {
+//             console.log(response.data); // show if success
+//             if(response.status===200){
+//               window.location.replace('http://localhost/larabook/index.php/messages');
+//               app.msg = 'your message has been sent successfully';
+//             }
+
+//           })
+//           .catch(function (error) {
+//             console.log(error); // run if we have error
+//           });
+//    }
+</script>

@@ -75,11 +75,10 @@
                             <span class="back"><i class="fa fa-chevron-left" aria-hidden="true"></i></span>
                         </h4>
                     </li>
-                    <li><a href="#"> Danh sách tickets<span>0</span></a></li>
-                    <li><a href="#">Tickets chưa giải quyết<span>2</span></a></li>
-                    <li><a href="#">Tickets giải quyết gần đây<span>0</span></a></li>
-                    <li><a href="#">Tickets đang chờ xử lý<span>3</span></a></li>
-                    <li><a href="#">Tickets đã xóa<span>1</span></a></li>
+                    <li><a href="#"> Danh sách khách cần hỗ trợ<span class="allist">0</span></a></li>
+                    <li><a href="#">khách chưa hỗ trợ<span class="new">2</span></a></li>
+                    <li><a href="#" >Khách đã hỗ trợ<span class="proc">0</span></a></li>
+                   
                 </ul>
             </div>
         </div>
@@ -90,8 +89,8 @@
     <div id="page-wrapper">
         <div class="row">
             <div class="col-lg-12">
-                <h1 >Tickets đang chờ xử lý</h1>
-                <h4 class="page-header hr-hd"><span>3</span> Tickets</h4>
+                <h1 >Hỗ trợ khách hàng online</h1>
+                <h4 class="page-header hr-hd"><span class="ngayhientai">  </span>{{Email}}</h4>
             </div> 
         </div>
 
@@ -156,83 +155,7 @@
                                             </td>
                                         </tr>
 
-                                        <tr>
-                                            <td>
-                                                <input type="checkbox" name="cid" value="5abdc9aa598c600b6c7fd56b" />
-                                            </td>
-                                            <td>
-                                                web tôi bị hư rồi không 
-                                            </td>
-                                            <td>
-                                                văn Nam
-                                            </td>
-                                            <td>
-                                                <a href="#">
-                                                    <span class="label label-success">active</span>
-                                                </a>
-
-                                            </td>
-                                            <td>
-                                                Yesterday 21:33
-                                            </td>
-                                            <td>
-                                                hau@yahoo.com
-                                            </td>
-                                            <td>
-                                                <a v-on:click="Ischeck=true" href="#" type="button" class="btn btn-info btn-sm ">Hỗ trợ</a>
-                                            </td>
-                                        </tr>
-
-                                        <tr>
-                                            <td>
-                                                <input type="checkbox" name="cid" value="5af7d6a306b3d71a08df04b1" />
-                                            </td>
-                                            <td>
-                                                làm sao lấy được port và ip của máy
-                                            </td>
-                                            <td>
-                                                Vương
-                                            </td>
-                                            <td>
-                                                <a href="#">
-                                                    <span class="label label-success">active</span>
-                                                </a>
-                                            </td>
-                                            <td>
-                                                Yesterday 21:33
-                                            </td>
-                                            <td>
-                                                hau@yahoo.com
-                                            </td>
-                                            <td>
-                                                <a v-on:click="Ischeck=true" type="button" class="btn btn-info btn-sm ">Hỗ trợ</a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <input type="checkbox" name="cid" value="5af7d6d506b3d71a08df04b2" />
-                                            </td>
-                                            <td>
-                                                reponsive là gì
-                                            </td>
-                                            <td>
-                                                đăng
-                                            </td>
-                                            <td>
-                                                <a href="#">
-                                                    <span class="label label-success">active</span>
-                                                </a>
-                                            </td>
-                                            <td>
-                                                Yesterday 21:33
-                                            </td>
-                                            <td>
-                                                hau@yahoo.com
-                                            </td>
-                                            <td>
-                                                <a type="button" v-on:click="Ischeck=true" class="btn btn-info btn-sm ">Hỗ trợ</a>
-                                            </td>
-                                        </tr>
+                                      
 
                                     </tbody>
                                 </table>
@@ -267,9 +190,11 @@
                         <h3 class="panel-title"><span class="glyphicon glyphicon-comment"></span> <i> Văn Hậu </i><div style="display: none;"></div></h3>
                     </div>
                     <div class="col-md-4 col-xs-4 btncl-mini" style="text-align: right;">
-                        <a href="#"><span class="glyphicon glyphicon-minus minim_chat_window"></span></a>
-                          <a href="#" ><span  style="visibility: collapse;" class="glyphicon glyphicon-new-window show_chat_window"></span></a>
-                        <a href="#" v-on:click="Ischeck=false"><span style="color: red;" class="glyphicon glyphicon-remove icon_close" data-id="chat_window_1"></span></a>
+                          <!--button hidden chat-->
+                        <a ><span class="glyphicon glyphicon-minus minim_chat_window"></span></a>
+                        <!--button show chat-->
+                          <a ><span  style="visibility: collapse;" class="glyphicon glyphicon-new-window show_chat_window"></span></a>
+                        <a  v-on:click="Ischeck=false"><span style="color: red;" class="glyphicon glyphicon-remove icon_close" data-id="chat_window_1"></span></a>
                     </div>
                 </div>
 
@@ -295,28 +220,43 @@
 </div>
 </div>
 </template>
-<script >
-    import jwtDecode from 'vue-jwt-decode';
-    import {eventBus} from '../main.js';
 
+<script >
+
+    import jwtDecode from 'vue-jwt-decode';
+    // import {box} from '../assets/js/boxchat.js';
+    //import {custom} from '../assets/js/custom.js';
+    import {eventBus} from '../main.js';
     export default{
+
         data(){
+
            // console.log(localStorage.key);
            var name = localStorage.getItem('key');
            // location.reload();  
-          
+
             return {
                 Ischeck: false,
                 Email: name,
                 flag:''
-            
             }
-
         },
-       
+   
+         created(){
+            this.reloadPage();
+          
+        },  
+         methods:{
+            reloadPage:function() {
+                if(this.Email != ''){
+                    window.location.replace('http://localhost:8080/#/list-tickets');
+                }
+            }
+       }
      
 
 
     }
+
 </script>
   

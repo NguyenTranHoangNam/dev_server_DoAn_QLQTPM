@@ -108,11 +108,15 @@ socket.on('message', arg => {
 });
 
 $(document).ready(function() {
+    $(".mytext").css("visibility", "collapse");
     $('div.w3agile_newsletter_right.chatio #send').click(() => {
-        alert($('div.w3agile_newsletter_right.chatio:nth-child(3) input:nth-child(1)').val());
+        alert('chào '+$('div.w3agile_newsletter_right.chatio:nth-child(3) input:nth-child(1)').val() + ' chat với chúng tôi để hỗ trợ');
         socket.emit('change_email', $('div.w3agile_newsletter_right.chatio:nth-child(3) input:nth-child(1)').val());
+         $(".chatio").css("visibility", "collapse");
+         $(".mytext").css("visibility", "visible");
+         $(".box-message").css("height", "73%");
     });
-
+   
     $('.showshere').click(() => {
         if(accept_request) {
             socket.emit('message', $('.text.text-r input.mytext').val());
