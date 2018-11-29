@@ -30,14 +30,12 @@ var session = require('express-session');
 
 exports.login = function(req, res){
 	if(req.session.Email){
-		res.status(100).send({message: 'Đã đăng nhập'});
+		res.status(400).send({message: 'Đã đăng nhập'});
 	}else{
 		var un = req.body.u;
 		var pw = req.body.p;
-			console.log('select count(*) as sl,ComID, Email, Password, Username, PhoneNumber from AccountCompany where '+
-			'Email like \''+un+'\' and Password like \''+md5(pw)+'\'');
-		connect.load('select count(*) as sl, Email, Password, Username, PhoneNumber from AccountCompany where '+
-			'Email like \''+un+'\' and Password like \''+md5(pw)+'\'  group by Email')
+		connect.load(`select Email, Password, Username, PhoneNumber from AccountCompany 
+			where md5(Email) like md5('${un}') and Password like md5('${p}')`)
 		.then(users => { 
 			//console.log(JSON.stringify(users));
 			console.log(JSON.stringify(users));
