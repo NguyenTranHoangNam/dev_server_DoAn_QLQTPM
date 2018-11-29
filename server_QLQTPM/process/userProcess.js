@@ -35,7 +35,7 @@ exports.login = function(req, res){
 		var un = req.body.u;
 		var pw = req.body.p;
 		connect.load(`select Email, Password, Username, PhoneNumber from AccountCompany 
-			where md5(Email) like md5('${un}') and Password like md5('${p}')`)
+			where md5(Email) like md5('${un}') and Password like md5('${pw}')`)
 		.then(users => { 
 			//console.log(JSON.stringify(users));
 			console.log(JSON.stringify(users));
@@ -51,7 +51,10 @@ exports.login = function(req, res){
 				//res.status(400).send({ message: 'Đăng nhập thất bại' });
 			}
 		})
-		.catch((error) => res.status(400).send({success:0}));
+		.catch((error) => {
+			console.log(error);
+			res.status(400).send({success:0});
+		});
 	}
 }
 
