@@ -20,9 +20,9 @@ input: info = {
 */
 exports.sendMail = function(infomation,res,mode = 0) {
 	var transporter = nodemailer.createTransport({
-		// host: infomation.host,
-		// port: infomation.port,
-    service:'Gmail',
+		 host: infomation.host,
+		 port: infomation.port,
+    //service: infomation.service,
     tls:{
         rejectUnauthorized:false
     },
@@ -48,6 +48,7 @@ exports.sendMail = function(infomation,res,mode = 0) {
 			res.status(400).send({message: 'Có lỗi xảy ra khi gửi mail!'});
 		} else {
 			console.log('Email sent: ' + info);
+            return db.write( "INSERT INTO Mail (`Subject`, `Content`, `Email`, `SendTime`,`InReplyTo`,`TypeID`) VALUES ('" + infomation.subject + "', '" + infomation.content_mail + "', '" + infomation.email_receive + "', '" + formatDate(new Date()) + "','',"+1+")");
 			if(mode == 0)
 				res.status(200).send({message: 'Đã gửi thành công!'});
 			else if(mode == 1)

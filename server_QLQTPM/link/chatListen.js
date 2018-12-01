@@ -17,7 +17,6 @@ var listRequest = [];
 wss.on('connection', function(socket) {
 	console.log(`${socket.id} - ${socket.m_mail} ket noi toi`);
 
-
 	socket.on('disconnection', () => {
 		for (var i = 0; i < listRequest.length; i++) {
 			if(listRequest[i].id == socket.id)
@@ -54,7 +53,7 @@ wss.on('connection', function(socket) {
 
 	socket.on('change_status', info => {
 		for (var i = 0; i < listRequest.length; i++) {
-			if(listRequest[i].id == socket.m_room && listRequest[i].statu != 'exitted') {
+			if(listRequest[i].m_mail == socket.m_room && listRequest[i].statu != 'exitted') {
 				listRequest[i].m_statu =  info;
 			}
 		}
@@ -62,12 +61,12 @@ wss.on('connection', function(socket) {
 
 	socket.on('receive_request', info => {
 		socket.leave(socket.m_room);
-		socket.m_room = info.id;
-		socket.join(info.id);
 		socket.m_name = info.name;
 
 		for (var i = 0; i < listRequest.length; i++) {
 			if(listRequest[i].id  == info.id){
+				socket.m_room = listRequest[i].m_mail;
+				socket.join(listRequest[i].m_mail);
 				listRequest[i].m_statu = 'process'
 				listRequest[i].emit('accept_request'); //////////////////////////////// customer
 				console.log(socket.m_name +'da nhan yeu cau cua ' + listRequest[i].m_mail);
@@ -80,9 +79,14 @@ wss.on('connection', function(socket) {
 		wss.sockets.in(socket.m_room).emit('message', {user: socket.id, message: info});
 	});
 
+	socket.on('request_connection', email => {
+
+	});
+
 	//customer
 	socket.on('change_email', val => {
 		socket.m_mail = val;
+		socket.join(val);
 		console.log(`${socket.id} doi ten dinh danh ${socket.m_mail}`);
 	});
 
@@ -110,7 +114,7 @@ wss.on('connection', function(socket) {
 	socket.on('message', info => {
 		console.log(`khach noi ${socket.id} - ${socket.m_mail} - ${info.m_message}`);
 		wss.sockets.in(socket.id).emit('message', {user: socket.id, message: info});
-	})
+	});
 });
 
 server.listen(2018, () => {

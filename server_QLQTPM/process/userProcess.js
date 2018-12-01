@@ -107,7 +107,7 @@ exports.register = function(req, res) {
 	let pw = req.body.pw;
 	let f_name = req.body.uname;
 	let phone = req.body.phone;
-	connect.load('insert into AccountCompany(Username, Email, Password, PhoneNumber) values(\''+f_name+'\', \''+email+'\',md5(\''+pw+'\'),\''+phone+'\');')
+	connect.write('insert into AccountCompany(Username, Email, Password, PhoneNumber) values(\''+f_name+'\', \''+email+'\',md5(\''+pw+'\'),\''+phone+'\');')
 	.then(() => {
 		res.status(200).send({message: 'Tạo tài khoản thành công.'});
 	})
